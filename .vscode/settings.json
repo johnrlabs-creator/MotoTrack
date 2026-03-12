@@ -1,0 +1,10 @@
+{
+  // Use Prettier as the default formatter for the workspace.
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Format files automatically on save.
+  "editor.formatOnSave": true,
+
+  // Only use Prettier if a config file exists in the workspace.
+  "prettier.requireConfig": true
+}

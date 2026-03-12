@@ -1,0 +1,58 @@
+{
+  "vehicles": [
+    {
+      "id": 1,
+      "icon": "🚙",
+      "name": "Daily Driver",
+      "year": 2019,
+      "model": "Toyota Vios",
+      "plate": "ABC-1234",
+      "status": "ok",
+      "statusLabel": "Good",
+      "mileage": "42,300 km"
+    },
+    {
+      "id": 2,
+      "icon": "🚐",
+      "name": "Family Van",
+      "year": 2017,
+      "model": "Toyota Hi-Ace",
+      "plate": "XYZ-5678",
+      "status": "warn",
+      "statusLabel": "Due Soon",
+      "mileage": "78,100 km"
+    },
+    {
+      "id": 3,
+      "icon": "🏍",
+      "name": "Weekend Bike",
+      "year": 2020,
+      "model": "Honda Click 125",
+      "plate": "MNO-9012",
+      "status": "bad",
+      "statusLabel": "Overdue",
+      "mileage": "7000km"
+    }
+  ],
+  "maintenance": [
+    {
+      "id": 1,
+      "vehicleId": 1,
+      "type": "Oil Change",
+      "date": "2024-11-15",
+      "mileageAtService": 44500,
+      "cost": 1200,
+      "notes": "Used synthetic oil"
+    }
+  ],
+  "reminders": [
+    {
+      "id": 1,
+      "vehicleId": 1,
+      "type": "PMS",
+      "dueDate": "2025-03-01",
+      "dueMileage": 47000,
+      "isDone": false
+    }
+  ]
+}

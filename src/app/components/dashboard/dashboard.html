@@ -1,0 +1,198 @@
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-icon">🔧</div>
+      <div class="logo-text">Auto<span>Track</span></div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">Main</div>
+    <a class="nav-item" [class.active]="activeNav === 'dashboard'" (click)="setNav('dashboard')">
+      <span class="nav-icon">◈</span> Dashboard
+    </a>
+    <a class="nav-item" [class.active]="activeNav === 'vehicles'" (click)="setNav('vehicles')">
+      <span class="nav-icon">🚗</span> Vehicles
+    </a>
+    <a class="nav-item" [class.active]="activeNav === 'log'" (click)="setNav('log')">
+      <span class="nav-icon">📋</span> Maintenance Log
+    </a>
+    <a class="nav-item" [class.active]="activeNav === 'reminders'" (click)="setNav('reminders')">
+      <span class="nav-icon">🔔</span> Reminders
+      <span class="badge-alert">{{ overdueCount }}</span>
+    </a>
+
+    <div class="nav-label" style="margin-top:8px">Reports</div>
+    <a class="nav-item" [class.active]="activeNav === 'cost'" (click)="setNav('cost')">
+      <span class="nav-icon">📊</span> Cost Analysis
+    </a>
+    <a class="nav-item" [class.active]="activeNav === 'export'" (click)="setNav('export')">
+      <span class="nav-icon">⬇</span> Export CSV
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">{{ userInitial }}</div>
+      <div class="user-info">
+        <div class="user-name">{{ userName }}</div>
+        <div class="user-plan">{{ userPlan }}</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div>
+      <div class="page-title">Dashboard</div>
+      <div class="page-subtitle">// fleet overview · march 2026</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" (click)="onExport()">⬇ Export</button>
+      <button class="btn btn-primary" (click)="onAddVehicle()">+ Add Vehicle</button>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stats-row">
+    <div class="stat-card amber">
+      <div class="stat-label">Total Vehicles</div>
+      <div class="stat-value">{{ stats().totalVehicles }}</div>
+      <div class="stat-sub">🚗 active fleet</div>
+      <div class="stat-bg-icon">🚗</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Overdue Services</div>
+      <div class="stat-value">{{ stats().overdueServices }}</div>
+      <div class="stat-sub">⚠ needs attention</div>
+      <div class="stat-bg-icon">⚠</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Spent This Year</div>
+      <div class="stat-value">{{ stats().spentThisYear }}</div>
+      <div class="stat-sub">↑ vs last year</div>
+      <div class="stat-bg-icon">💰</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-label">Next Service</div>
+      <div class="stat-value">{{ stats().nextServiceDays }}</div>
+      <div class="stat-sub">📅 {{ stats().nextServiceDate }}</div>
+      <div class="stat-bg-icon">🔧</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="grid-3-1">
+    <div class="card" style="animation-delay:0.25s">
+      <div class="card-header">
+        <div class="card-title">Monthly Maintenance Cost</div>
+        <div class="card-tag">2026 · All Vehicles</div>
+      </div>
+      <div id="costChart"></div>
+    </div>
+
+    <div class="card" style="animation-delay:0.3s">
+      <div class="card-header">
+        <div class="card-title">Fleet Health</div>
+        <div class="card-tag">Live</div>
+      </div>
+      <div id="donutChart"></div>
+      <div class="health-ring-wrapper">
+        <div class="health-label">{{ fleetHealthScore }}%</div>
+        <div class="health-sublabel">fleet health score</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VEHICLES + REMINDERS -->
+  <div class="grid-2">
+    <div class="card" style="animation-delay:0.35s">
+      <div class="card-header">
+        <div class="card-title">My Vehicles</div>
+        <div class="card-tag">{{ vehicles.length }} total</div>
+      </div>
+      <div class="vehicle-list">
+        <div
+          class="vehicle-row"
+          *ngFor="let vehicle of vehicles"
+          (click)="onVehicleClick(vehicle)"
+        >
+          <div class="vehicle-icon" [class]="vehicle.status">{{ vehicle.icon }}</div>
+          <div class="vehicle-info">
+            <div class="vehicle-name">{{ vehicle.name }}</div>
+            <div class="vehicle-meta">{{ vehicle.year }} · {{ vehicle.model }} · {{ vehicle.plate }}</div>
+          </div>
+          <div class="vehicle-status">
+            <span class="pill" [class]="vehicle.status">{{ vehicle.statusLabel }}</span>
+            <span class="vehicle-mileage">{{ vehicle.mileage }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="animation-delay:0.4s">
+      <div class="card-header">
+        <div class="card-title">Upcoming Services</div>
+        <div class="card-tag">Next 30 days</div>
+      </div>
+      <div class="reminder-list">
+        <div
+          class="reminder-item"
+          *ngFor="let reminder of reminders"
+          [class]="reminder.urgency"
+        >
+          <div class="reminder-dot"></div>
+          <div class="reminder-text">
+            <div class="reminder-service">{{ reminder.service }}</div>
+            <div class="reminder-car">{{ reminder.vehicle }}</div>
+          </div>
+          <div class="reminder-due" [innerHTML]="reminder.dueLabel"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT LOG -->
+  <div class="card" style="animation-delay:0.45s; margin-bottom: 32px;">
+    <div class="card-header">
+      <div class="card-title">Recent Maintenance Log</div>
+      <button class="btn btn-ghost" style="font-size:0.8rem; padding: 6px 12px;" (click)="onViewAll()">
+        View All →
+      </button>
+    </div>
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Vehicle</th>
+          <th>Service</th>
+          <th>Mileage</th>
+          <th>Shop</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of maintenanceLogs">
+          <td class="td-mono td-muted">{{ log.date }}</td>
+          <td>{{ log.vehicle }}</td>
+          <td><span class="service-tag">{{ log.service }}</span></td>
+          <td class="td-mono">{{ log.mileage }}</td>
+          <td class="td-muted td-sm">{{ log.shop }}</td>
+          <td class="cost-amount positive">{{ log.cost }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-add-vehicle-modal
+  *ngIf="showAddVehicleModal"
+  (closed)="onModalClosed()"
+  (vehicleAdded)="onVehicleAdded($event)"
+></app-add-vehicle-modal>
+
+</main>
