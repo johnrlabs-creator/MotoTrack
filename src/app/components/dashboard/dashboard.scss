@@ -1,4 +1,4 @@
-// ── CSS CUSTOM PROPERTIES ──────────────────────────────────────────────────
+// CSS CUSTOM PROPERTIES
 :host {
   --bg: #0f1117;
   --surface: #161b25;
@@ -35,7 +35,7 @@
   opacity: 0.4;
 }
 
-// ── SIDEBAR ───────────────────────────────────────────────────────────────
+// SIDEBAR
 .sidebar {
   width: 220px;
   min-height: 100vh;
@@ -194,7 +194,7 @@
   color: var(--muted);
 }
 
-// ── MAIN ──────────────────────────────────────────────────────────────────
+//   MAIN
 .main {
   margin-left: 220px;
   flex: 1;
@@ -204,7 +204,7 @@
   z-index: 1;
 }
 
-// ── TOP BAR ───────────────────────────────────────────────────────────────
+//   TOP BAR  ─
 .topbar {
   display: flex;
   align-items: center;
@@ -234,7 +234,7 @@
   align-items: center;
 }
 
-// ── BUTTONS ───────────────────────────────────────────────────────────────
+//   BUTTONS  ─
 .btn {
   display: flex;
   align-items: center;
@@ -270,7 +270,7 @@
   }
 }
 
-// ── STAT CARDS ────────────────────────────────────────────────────────────
+// STAT CARDS
 .stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -287,10 +287,18 @@
   overflow: hidden;
   animation: fadeUp 0.4s ease both;
 
-  &:nth-child(1) { animation-delay: 0.05s; }
-  &:nth-child(2) { animation-delay: 0.1s; }
-  &:nth-child(3) { animation-delay: 0.15s; }
-  &:nth-child(4) { animation-delay: 0.2s; }
+  &:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  &:nth-child(4) {
+    animation-delay: 0.2s;
+  }
 
   &::after {
     content: '';
@@ -302,23 +310,39 @@
   }
 
   &.amber {
-    &::after { background: var(--amber); }
-    .stat-value { color: var(--amber); }
+    &::after {
+      background: var(--amber);
+    }
+    .stat-value {
+      color: var(--amber);
+    }
   }
 
   &.red {
-    &::after { background: var(--red); }
-    .stat-value { color: var(--red); }
+    &::after {
+      background: var(--red);
+    }
+    .stat-value {
+      color: var(--red);
+    }
   }
 
   &.green {
-    &::after { background: var(--green); }
-    .stat-value { color: var(--green); }
+    &::after {
+      background: var(--green);
+    }
+    .stat-value {
+      color: var(--green);
+    }
   }
 
   &.blue {
-    &::after { background: var(--blue); }
-    .stat-value { color: var(--blue); }
+    &::after {
+      background: var(--blue);
+    }
+    .stat-value {
+      color: var(--blue);
+    }
   }
 }
 
@@ -356,7 +380,7 @@
   opacity: 0.05;
 }
 
-// ── GRID LAYOUT ───────────────────────────────────────────────────────────
+//   GRID LAYOUT                              ─
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -378,8 +402,12 @@
   padding: 24px;
   animation: fadeUp 0.5s ease both;
 
-  &:nth-child(1) { animation-delay: 0.2s; }
-  &:nth-child(2) { animation-delay: 0.25s; }
+  &:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.25s;
+  }
 }
 
 .card-header {
@@ -407,7 +435,7 @@
   border-radius: 4px;
 }
 
-// ── VEHICLE CARDS ─────────────────────────────────────────────────────────
+// VEHICLE CARDS
 .vehicle-list {
   display: flex;
   flex-direction: column;
@@ -441,9 +469,15 @@
   font-size: 1.3rem;
   flex-shrink: 0;
 
-  &.ok   { background: rgba(34, 197, 94, 0.1); }
-  &.warn { background: rgba(245, 158, 11, 0.1); }
-  &.bad  { background: rgba(239, 68, 68, 0.1); }
+  &.ok {
+    background: rgba(34, 197, 94, 0.1);
+  }
+  &.warn {
+    background: rgba(245, 158, 11, 0.1);
+  }
+  &.bad {
+    background: rgba(239, 68, 68, 0.1);
+  }
 }
 
 .vehicle-info {
@@ -479,9 +513,18 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 
-  &.ok   { background: rgba(34, 197, 94, 0.15); color: var(--green); }
-  &.warn { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
-  &.bad  { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+  &.ok {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--green);
+  }
+  &.warn {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--amber);
+  }
+  &.bad {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--red);
+  }
 }
 
 .vehicle-mileage {
@@ -490,7 +533,7 @@
   color: var(--muted);
 }
 
-// ── REMINDERS ─────────────────────────────────────────────────────────────
+// REMINDERS
 .reminder-list {
   display: flex;
   flex-direction: column;
@@ -507,7 +550,9 @@
   border-left: 3px solid transparent;
   transition: all 0.15s;
 
-  &:hover { background: #232c3d; }
+  &:hover {
+    background: #232c3d;
+  }
 
   &.overdue {
     border-left-color: var(--red);
@@ -517,7 +562,9 @@
       box-shadow: 0 0 6px var(--red);
     }
 
-    .reminder-due { color: var(--red); }
+    .reminder-due {
+      color: var(--red);
+    }
   }
 
   &.soon {
@@ -528,14 +575,20 @@
       box-shadow: 0 0 6px var(--amber);
     }
 
-    .reminder-due { color: var(--amber); }
+    .reminder-due {
+      color: var(--amber);
+    }
   }
 
   &.ok {
     border-left-color: var(--green);
 
-    .reminder-dot { background: var(--green); }
-    .reminder-due { color: var(--green); }
+    .reminder-dot {
+      background: var(--green);
+    }
+    .reminder-due {
+      color: var(--green);
+    }
   }
 }
 
@@ -568,7 +621,7 @@
   text-align: right;
 }
 
-// ── DIVIDER ───────────────────────────────────────────────────────────────
+// DIVIDER
 .section-divider {
   display: flex;
   align-items: center;
@@ -592,7 +645,7 @@
   }
 }
 
-// ── COST TABLE ────────────────────────────────────────────────────────────
+// COST TABLE
 .cost-table {
   width: 100%;
   border-collapse: collapse;
@@ -614,20 +667,34 @@
     border-bottom: 1px solid rgba(42, 51, 71, 0.5);
   }
 
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--surface2); }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  tr:hover td {
+    background: var(--surface2);
+  }
 }
 
 // Utility modifier classes for table cells
-.td-mono  { font-family: var(--font-mono); font-size: 0.8rem; }
-.td-muted { color: var(--muted); font-size: 0.82rem; }
-.td-sm    { font-size: 0.82rem; }
+.td-mono {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+.td-muted {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.td-sm {
+  font-size: 0.82rem;
+}
 
 .cost-amount {
   font-family: var(--font-mono);
   font-size: 0.85rem;
 
-  &.positive { color: var(--red); }
+  &.positive {
+    color: var(--red);
+  }
 }
 
 .service-tag {
@@ -642,7 +709,7 @@
   font-family: var(--font-mono);
 }
 
-// ── HEALTH RING ───────────────────────────────────────────────────────────
+// HEALTH RING
 .health-ring-wrapper {
   display: flex;
   align-items: center;
@@ -667,7 +734,7 @@
   letter-spacing: 0.1em;
 }
 
-// ── ANIMATIONS ────────────────────────────────────────────────────────────
+// ANIMATIONS
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -679,7 +746,14 @@
   }
 }
 
-// ── SCROLLBAR ─────────────────────────────────────────────────────────────
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+// SCROLLBAR
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}

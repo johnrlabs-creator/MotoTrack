@@ -1,0 +1,378 @@
+<!-- MAIN -->
+<main class="main">
+  <!-- PAGE HEADER -->
+  <div class="mb-8 flex items-start justify-between fade-up">
+    <div>
+      <h1 class="page-title">My Fleet</h1>
+      <p class="page-subtitle">
+        {{ filteredVehicles().length }} of {{ vehicles.length }} vehicles
+        @if (activeFilter() !== 'all') {
+          · filtered by <span class="text-amber-400">{{ activeFilter() }}</span>
+        }
+      </p>
+    </div>
+    <!-- TODO: Add vehicle feature -->
+    <!-- <button class="btn btn-primary" (click)="onAddVehicle()">+ Add Vehicle</button> -->
+  </div>
+
+  <!-- FLEET SUMMARY STRIP -->
+  <!--
+    FIX 1: fleetStats is a computed() signal — call it with ()
+    FIX 2: [class]="stat.color" is DESTRUCTIVE (removes all existing classes).
+            Use explicit boolean [class.x] bindings per variant.
+  -->
+  <div class="fleet-strip fade-up" style="animation-delay: 0.05s">
+    @for (stat of computedFleetStats(); track stat.label; let last = $last) {
+      <div class="fleet-stat" [class.no-border]="last">
+        <span class="fleet-stat-label">{{ stat.label }}</span>
+        <span
+          class="fleet-stat-value"
+          [class.c-amber]="stat.color === 'amber'"
+          [class.c-green]="stat.color === 'green'"
+          [class.c-red]="stat.color === 'red'"
+          >{{ stat.value }}</span
+        >
+        <span class="fleet-stat-sub">{{ stat.sub }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="mb-6 flex flex-wrap items-center gap-3 fade-up" style="animation-delay: 0.1s">
+    <!-- Search -->
+    <div class="relative min-w-[200px] flex-1">
+      <span class="search-icon">⌕</span>
+      <input
+        class="search-input pl-8"
+        type="text"
+        placeholder="Search vehicles, plate, model…"
+        [value]="searchQuery()"
+        (input)="onSearch($event)"
+      />
+    </div>
+
+    <!-- Filter pills -->
+    <!--
+      FIX 3: [class]="..." on an element with existing classes replaces ALL
+              of them. Use [class.active] + [class.f-*] as separate bindings.
+    -->
+    <div class="filter-group">
+      @for (f of filters; track f.value) {
+        <button
+          class="filter-pill"
+          [class.active]="activeFilter() === f.value"
+          [class.f-all]="activeFilter() === f.value && f.value === 'all'"
+          [class.f-ok]="activeFilter() === f.value && f.value === 'ok'"
+          [class.f-soon]="activeFilter() === f.value && f.value === 'warn'"
+          [class.f-overdue]="activeFilter() === f.value && f.value === 'bad'"
+          (click)="setFilter(f.value)"
+        >
+          {{ f.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Sort -->
+    <select class="sort-select" [value]="sortBy()" (change)="onSort($event)">
+      <option value="nickname">Name A–Z</option>
+      <option value="status">Status</option>
+      <option value="mileage">Mileage</option>
+      <option value="nextService">Next Service</option>
+      <option value="year">Year</option>
+    </select>
+
+    <!-- View toggle -->
+    <div class="view-toggle">
+      <button
+        class="view-btn"
+        [class.active]="viewMode() === 'grid'"
+        (click)="viewMode.set('grid')"
+        aria-label="Grid view"
+      >
+        ⊞
+      </button>
+      <button
+        class="view-btn"
+        [class.active]="viewMode() === 'list'"
+        (click)="viewMode.set('list')"
+        aria-label="List view"
+      >
+        ☰
+      </button>
+    </div>
+  </div>
+
+  <!-- GRID VIEW -->
+  @if (viewMode() === 'grid') {
+    @if (filteredVehicles().length > 0) {
+      <div class="vehicle-grid">
+        @for (v of filteredVehicles(); track v.id; let i = $index) {
+          <div
+            class="vehicle-card fade-up"
+            [style.animation-delay]="i * 0.06 + 's'"
+            (click)="onViewVehicle(v)"
+          >
+            <!-- Colored top accent per status -->
+            <div
+              class="card-accent"
+              [class.ok]="v.status === 'ok'"
+              [class.soon]="v.status === 'warn'"
+              [class.overdue]="v.status === 'warn'"
+            ></div>
+
+            <!-- Identity row -->
+            <div class="mb-4 flex items-start justify-between">
+              <div class="flex items-center gap-3">
+                <div
+                  class="vehicle-thumb"
+                  [class.ok]="v.status === 'ok'"
+                  [class.soon]="v.status === 'warn'"
+                  [class.overdue]="v.status === 'warn'"
+                >
+                  {{ v.icon }}
+                </div>
+                <div>
+                  <div class="card-nickname">{{ v.nickName }}</div>
+                  <div class="card-year-model">{{ v.year }} · {{ v.model }}</div>
+                </div>
+              </div>
+              <span
+                class="status-pill shrink-0"
+                [class.ok]="v.status === 'ok'"
+                [class.soon]="v.status === 'warn'"
+                [class.overdue]="v.status === 'bad'"
+                >{{ v.statusLabel }}</span
+              >
+            </div>
+
+            <!-- Plate tag -->
+            <div class="plate-tag mb-4">
+              <span>🪪</span>
+              <span>{{ v.plateNumber }}</span>
+            </div>
+
+            <!-- Health bar -->
+            <!--
+              FIX 4: healthColor() returned Tailwind class strings like
+                      'text-green-400' which won't purge correctly and
+                      conflict with [class]. Use explicit boolean bindings.
+            -->
+            <div class="mb-4">
+              <div class="mb-1.5 flex items-center justify-between">
+                <span class="health-label">Health</span>
+                <span
+                  class="health-pct"
+                  [class.c-green]="v.health >= 75"
+                  [class.c-amber]="v.health >= 50 && v.health < 75"
+                  [class.c-red]="v.health < 50"
+                  >{{ v.health }}%</span
+                >
+              </div>
+              <div class="health-track">
+                <div
+                  class="health-fill"
+                  [class.c-green]="v.health >= 75"
+                  [class.c-amber]="v.health >= 50 && v.health < 75"
+                  [class.c-red]="v.health < 50"
+                  [style.width.%]="v.health"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Mini stats -->
+            <div class="mini-stats">
+              <div class="mini-stat" style="border-right: 1px solid #2a3347">
+                <span class="mini-stat-label">Mileage</span>
+                <span class="mini-stat-value c-amber">{{ v.mile }}</span>
+              </div>
+              <div class="mini-stat" style="border-right: 1px solid #2a3347">
+                <span class="mini-stat-label">Services</span>
+                <span class="todo-font">Feautre coming soon..</span>
+                <!-- <span class="mini-stat-value">{{ v.totalServices }}</span> -->
+              </div>
+              <div class="mini-stat">
+                <span class="mini-stat-label">Next Due</span>
+                <span
+                  class="mini-stat-value"
+                  [class.c-red]="getDaysFromNow(v.nextServiceDate) <= 0"
+                  [class.c-amber]="
+                    getDaysFromNow(v.nextServiceDate) > 0 && getDaysFromNow(v.nextServiceDate) <= 7
+                  "
+                  [class.c-green]="getDaysFromNow(v.nextServiceDate) > 7"
+                  >{{
+                    getDaysFromNow(v.nextServiceDate) <= 0
+                      ? 'OVERDUE'
+                      : getDaysFromNow(v.nextServiceDate) + 'd'
+                  }}</span
+                >
+              </div>
+            </div>
+
+            <!-- Next service preview -->
+            @if (v.nextServiceDate) {
+              <div class="next-service-row mt-3">
+                <!--
+                  FIX 5: Arbitrary Tailwind shadow classes generated at runtime
+                          are NOT included in the purged CSS bundle.
+                          Use SCSS classes with explicit glow styles instead.
+                -->
+                <span
+                  class="status-dot"
+                  [class.dot-red]="getDaysFromNow(v.nextServiceDate) <= 0"
+                  [class.dot-amber]="
+                    getDaysFromNow(v.nextServiceDate) > 0 && getDaysFromNow(v.nextServiceDate) <= 7
+                  "
+                  [class.dot-green]="getDaysFromNow(v.nextServiceDate) > 7"
+                ></span>
+                <!-- <span class="next-service-name">{{ v.nextService }}</span> -->
+                <span
+                  class="next-service-date ml-auto shrink-0"
+                  [class.c-red]="getDaysFromNow(v.nextServiceDate) <= 0"
+                  [class.c-amber]="
+                    getDaysFromNow(v.nextServiceDate) > 0 && getDaysFromNow(v.nextServiceDate) <= 7
+                  "
+                  [class.c-green]="getDaysFromNow(v.nextServiceDate) > 7"
+                  >{{ v.nextServiceDate }}</span
+                >
+              </div>
+            }
+
+            <!-- Hover action bar -->
+            <div class="card-actions" (click)="$event.stopPropagation()">
+              <button class="action-btn" (click)="onEdit(v)">✏ Edit</button>
+              <button class="action-btn accent" (click)="onLogService(v)">+ Log</button>
+              <button class="action-btn danger" (click)="onDelete(v)">🗑</button>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state fade-up">
+        <div class="empty-icon">🚗</div>
+        <div class="empty-title">NO VEHICLES FOUND</div>
+        <div class="empty-sub">
+          @if (searchQuery()) {
+            No results for "{{ searchQuery() }}" — try a different search
+          } @else {
+            No vehicles match the selected filter
+          }
+        </div>
+        <button class="btn btn-ghost mt-6" (click)="clearFilters()">Clear filters</button>
+      </div>
+    }
+  }
+
+  <!--   LIST VIEW ─────────────────────────────────────────────────────── -->
+  @if (viewMode() === 'list') {
+    <div class="list-container fade-up" style="animation-delay: 0.1s">
+      <div class="list-header">
+        <div class="lcol-vehicle">Vehicle</div>
+        <div class="lcol-plate">Plate</div>
+        <div class="lcol-status">Status</div>
+        <div class="lcol-health">Health</div>
+        <div class="lcol-mileage">Mileage</div>
+        <div class="lcol-services">Services</div>
+        <div class="lcol-next">Next Service</div>
+        <div class="lcol-actions text-right">Actions</div>
+      </div>
+
+      @for (v of filteredVehicles(); track v.id; let i = $index; let last = $last) {
+        <div
+          class="list-row fade-up"
+          [class.last-row]="last"
+          [style.animation-delay]="i * 0.04 + 's'"
+          (click)="onViewVehicle(v)"
+        >
+          <div class="lcol-vehicle flex items-center gap-3">
+            <div
+              class="vehicle-thumb-sm"
+              [class.ok]="v.status === 'ok'"
+              [class.soon]="v.status === 'warn'"
+              [class.overdue]="v.status === 'warn'"
+            >
+              {{ v.icon }}
+            </div>
+            <div>
+              <div class="list-nickname">{{ v.nickName }}</div>
+              <div class="card-year-model">{{ v.year }} · {{ v.model }}</div>
+            </div>
+          </div>
+
+          <div class="lcol-plate list-plate">{{ v.plateNumber }}</div>
+
+          <div class="lcol-status">
+            <span
+              class="status-pill"
+              [class.ok]="v.status === 'ok'"
+              [class.soon]="v.status === 'warn'"
+              [class.overdue]="v.status === 'bad'"
+              >{{ v.statusLabel }}</span
+            >
+          </div>
+
+          <div class="lcol-health">
+            <div
+              class="list-health-pct mb-1"
+              [class.c-green]="v.health >= 75"
+              [class.c-amber]="v.health >= 50 && v.health < 75"
+              [class.c-red]="v.health < 50"
+            >
+              {{ v.health }}%
+            </div>
+            <div class="health-track">
+              <div
+                class="health-fill"
+                [class.c-green]="v.health >= 75"
+                [class.c-amber]="v.health >= 50 && v.health < 75"
+                [class.c-red]="v.health < 50"
+                [style.width.%]="v.health"
+              ></div>
+            </div>
+          </div>
+
+          <div class="lcol-mileage c-amber list-mono">{{ v.mile }}</div>
+          <!-- <div class="lcol-services list-mono">{{ v.totalServices }}</div> -->
+
+          <div class="lcol-next flex items-center gap-2 min-w-0">
+            <span
+              class="status-dot shrink-0"
+              [class.dot-red]="getDaysFromNow(v.nextServiceDate) <= 0"
+              [class.dot-amber]="
+                getDaysFromNow(v.nextServiceDate) > 0 && getDaysFromNow(v.nextServiceDate) <= 7
+              "
+              [class.dot-green]="getDaysFromNow(v.nextServiceDate) > 7"
+            ></span>
+            <!-- TODO: nextService e.g. "Oil change" from the most urgent upcoming service -->
+            <!-- <span class="next-service-name truncate">{{ v.nextService }}</span> -->
+            <span
+              class="next-service-date ml-2 shrink-0"
+              [class.c-red]="getDaysFromNow(v.nextServiceDate) <= 0"
+              [class.c-amber]="
+                getDaysFromNow(v.nextServiceDate) > 0 && getDaysFromNow(v.nextServiceDate) <= 7
+              "
+              [class.c-green]="getDaysFromNow(v.nextServiceDate) > 7"
+              >{{ v.nextServiceDate }}</span
+            >
+          </div>
+
+          <div
+            class="lcol-actions flex items-center justify-end gap-1.5"
+            (click)="$event.stopPropagation()"
+          >
+            <button class="icon-btn" (click)="onEdit(v)" title="Edit">✏</button>
+            <button class="icon-btn accent" (click)="onLogService(v)" title="Log">+</button>
+            <button class="icon-btn danger" (click)="onDelete(v)" title="Delete">🗑</button>
+          </div>
+        </div>
+      }
+
+      @if (filteredVehicles().length === 0) {
+        <div class="empty-state fade-up py-16">
+          <div class="empty-icon text-4xl">🚗</div>
+          <div class="empty-sub">No vehicles found</div>
+          <button class="btn btn-ghost mt-3" (click)="clearFilters()">Clear filters</button>
+        </div>
+      }
+    </div>
+  }
+</main>

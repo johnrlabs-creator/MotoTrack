@@ -1,15 +1,11 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { ServiceReminder } from '../constants/service.constants';
+import { ServiceReminder } from '../interfaces/service.interface';
 import { VehicleService } from './vehicle';
 import { ServiceType } from '../constants/service.constants';
 
-
-
-
-
 const STORAGE_KEY = 'vmt_reminders';
-const WARN_MILES_AHEAD = 500;   // warn if within 500 miles
-const WARN_DAYS_AHEAD = 14;     // warn if within 14 days
+const WARN_MILES_AHEAD = 500; // warn if within 500 miles
+const WARN_DAYS_AHEAD = 14; // warn if within 14 days
 
 export type ReminderStatus = 'ok' | 'due_soon' | 'overdue';
 
@@ -31,14 +27,14 @@ export class ReminderService {
     if (!vehicle) return [];
 
     return this._reminders()
-      .filter(r => r.vehicleId === vehicleId && r.isActive)
-      .map(r => this.enrichWithStatus(r, vehicle.mileage));
+      .filter((r) => r.vehicleId === vehicleId && r.isActive)
+      .map((r) => this.enrichWithStatus(r, vehicle.mileage));
   }
 
   allActiveReminders(): ReminderWithStatus[] {
     return this._reminders()
-      .filter(r => r.isActive)
-      .map(r => {
+      .filter((r) => r.isActive)
+      .map((r) => {
         const vehicle = this.vehicleService.getById(r.vehicleId);
         return this.enrichWithStatus(r, vehicle?.mileage ?? 0);
       })
@@ -46,11 +42,11 @@ export class ReminderService {
   }
 
   overdueCount(): number {
-    return this.allActiveReminders().filter(r => r.status === 'overdue').length;
+    return this.allActiveReminders().filter((r) => r.status === 'overdue').length;
   }
 
   dueSoonCount(): number {
-    return this.allActiveReminders().filter(r => r.status === 'due_soon').length;
+    return this.allActiveReminders().filter((r) => r.status === 'due_soon').length;
   }
 
   private enrichWithStatus(reminder: ServiceReminder, currentMileage: number): ReminderWithStatus {
@@ -78,12 +74,10 @@ export class ReminderService {
   // Call this after a maintenance entry is logged to reset intervals
   markServiced(vehicleId: string, serviceType: string, currentMileage: number): void {
     const today = new Date();
-    this._reminders.update(reminders =>
-      reminders.map(r => {
+    this._reminders.update((reminders) =>
+      reminders.map((r) => {
         if (r.vehicleId !== vehicleId || r.serviceType !== serviceType) return r;
-        const nextMileage = r.mileageInterval
-          ? currentMileage + r.mileageInterval
-          : undefined;
+        const nextMileage = r.mileageInterval ? currentMileage + r.mileageInterval : undefined;
         const nextDate = r.monthInterval
           ? new Date(today.setMonth(today.getMonth() + r.monthInterval))
           : undefined;
@@ -94,27 +88,27 @@ export class ReminderService {
           nextDueMileage: nextMileage,
           nextDueDate: nextDate,
         };
-      })
+      }),
     );
     this.saveToStorage();
   }
 
   addReminder(data: Omit<ServiceReminder, 'id'>): ServiceReminder {
     const reminder: ServiceReminder = { ...data, id: crypto.randomUUID() };
-    this._reminders.update(r => [...r, reminder]);
+    this._reminders.update((r) => [...r, reminder]);
     this.saveToStorage();
     return reminder;
   }
 
   updateReminder(id: string, data: Partial<ServiceReminder>): void {
-    this._reminders.update(reminders =>
-      reminders.map(r => (r.id === id ? { ...r, ...data } : r))
+    this._reminders.update((reminders) =>
+      reminders.map((r) => (r.id === id ? { ...r, ...data } : r)),
     );
     this.saveToStorage();
   }
 
   deleteReminder(id: string): void {
-    this._reminders.update(reminders => reminders.filter(r => r.id !== id));
+    this._reminders.update((reminders) => reminders.filter((r) => r.id !== id));
     this.saveToStorage();
   }
 

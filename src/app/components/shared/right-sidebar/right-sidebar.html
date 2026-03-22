@@ -1,0 +1,42 @@
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-icon">🔧</div>
+      <div class="logo-text">Auto<span>Track</span></div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">Main</div>
+    @for (nav of sideNavItems; track nav.id) {
+      <a class="nav-item" [class.active]="activeNav() === nav.id" (click)="setNav(nav.id)">
+        <span class="nav-icon">
+          {{ nav.iconType }}
+        </span>
+        {{ nav.label }}
+
+        @if (nav.id === 'reminders' && overdueCount > 0) {
+          <span class="badge-alert">{{ overdueCount }}</span>
+        }
+      </a>
+    }
+
+    <div class="nav-label" style="margin-top: 8px">Reports</div>
+    <a class="nav-item" [class.active]="activeNav() === 'cost'" (click)="setNav('cost')">
+      <span class="nav-icon">📊</span> Cost Analysis
+    </a>
+    <a class="nav-item" [class.active]="activeNav() === 'export'" (click)="setNav('export')">
+      <span class="nav-icon">⬇</span> Export CSV
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">{{ userInitial }}</div>
+      <div class="user-info">
+        <div class="user-name">{{ userName }}</div>
+        <div class="user-plan">{{ userPlan }}</div>
+      </div>
+    </div>
+  </div>
+</aside>

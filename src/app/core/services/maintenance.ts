@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { VehicleService } from './vehicle';
-import { MaintenanceEntry } from '../models/maintenance.interface';
+import { MaintenanceEntry } from '../interfaces/maintenance.interface';
 
 const STORAGE_KEY = 'vmt_maintenance';
 

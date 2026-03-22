@@ -1,7 +1,5 @@
 <div class="modal-backdrop" (click)="onBackdropClick($event)" [@backdropAnim]>
-
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" [@modalAnim]>
-
     <!-- Header -->
     <div class="modal-header">
       <div class="modal-title-group">
@@ -16,299 +14,364 @@
 
     <!-- Step Indicator -->
     <div class="step-track">
-      <div
-        class="step-item"
-        *ngFor="let step of steps; let i = index"
-        [class.active]="currentStep === i"
-        [class.done]="currentStep > i"
-      >
-        <div class="step-dot">
-          <span *ngIf="currentStep <= i">{{ i + 1 }}</span>
-          <span *ngIf="currentStep > i">✓</span>
+      @for (step of steps; track $index) {
+        <div
+          class="step-item"
+          [class.active]="currentStep === $index"
+          [class.done]="currentStep > $index"
+        >
+          <div class="step-dot">
+            @if (currentStep <= $index) {
+              <span>{{ $index + 1 }}</span>
+            }
+            @if (currentStep > $index) {
+              <span>✓</span>
+            }
+          </div>
+          <div class="step-label">{{ step }}</div>
+          @if ($index < steps.length - 1) {
+            <div class="step-line"></div>
+          }
         </div>
-        <div class="step-label">{{ step }}</div>
-        <div class="step-line" *ngIf="i < steps.length - 1"></div>
-      </div>
+      }
     </div>
 
     <!-- Body -->
-    <div class="modal-body">
+    <form [formGroup]="vehicleForm">
+      <div class="modal-body">
+        <!-- STEP 0: Vehicle Identity -->
+        @if (currentStep === 0) {
+          <div class="step-panel" formGroupName="identity" [@stepAnim]>
+            <div class="section-label">Vehicle Details</div>
 
-      <!-- STEP 0: Vehicle Identity -->
-      <div class="step-panel" *ngIf="currentStep === 0" [@stepAnim]>
-        <div class="section-label">Vehicle Details</div>
+            <div class="form-row">
+              <div class="field">
+                <app-form-field
+                  label="Nickname / Alias"
+                  [control]="vehicleForm.get('identity.nickName')!"
+                />
+                <input
+                  class="field-input"
+                  type="text"
+                  placeholder="e.g. Daily Driver"
+                  formControlName="nickName"
+                />
+              </div>
+              <div class="field">
+                <label class="field-label">Vehicle Type</label>
+                <div class="type-picker">
+                  @for (vType of vehicleTypes; track vType) {
+                    <button
+                      class="type-btn"
+                      [class.selected]="
+                        vehicleForm.get('identity.vehicleType')?.value === vType.value
+                      "
+                      (click)="setVehicleType(vType.value)"
+                    >
+                      <span class="type-icon">{{ vType.icon }}</span>
+                      <span class="type-name">{{ vType.label }}</span>
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label">Nickname / Alias</label>
-            <input
-              class="field-input"
-              type="text"
-              placeholder="e.g. Daily Driver"
-              [(ngModel)]="form.nickname"
-            />
-          </div>
-          <div class="field">
-            <label class="field-label">Vehicle Type</label>
-            <div class="type-picker">
-              <button
-                class="type-btn"
-                *ngFor="let t of vehicleTypes"
-                [class.selected]="form.type === t.value"
-                (click)="form.type = t.value"
-              >
-                <span class="type-icon">{{ t.icon }}</span>
-                <span class="type-name">{{ t.label }}</span>
-              </button>
+            <div class="form-row">
+              <div class="field">
+                <app-form-field label="Make" [control]="vehicleForm.get('identity.make')!" />
+                <input
+                  class="field-input"
+                  type="text"
+                  placeholder="e.g. Daily Driver"
+                  formControlName="make"
+                />
+              </div>
+              <div class="field">
+                <app-form-field label="Model" [control]="vehicleForm.get('identity.model')!" />
+                <input
+                  class="field-input"
+                  type="text"
+                  placeholder="e.g. Vios"
+                  formControlName="model"
+                />
+              </div>
+              <div class="field field--sm">
+                <label class="field-label">Year</label>
+                <input
+                  class="field-input"
+                  type="number"
+                  placeholder="2019"
+                  formControlName="year"
+                  min="1980"
+                  [max]="currentYear"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <app-form-field
+                  label="Plate Number"
+                  [control]="vehicleForm.get('identity.plateNumber')!"
+                />
+                <input
+                  class="field-input"
+                  type="text"
+                  placeholder="e.g. Daily Driver"
+                  formControlName="plateNumber"
+                />
+              </div>
+              <div class="field">
+                <app-form-field label="Color" [control]="vehicleForm.get('identity.color')!" />
+                <input
+                  class="field-input"
+                  type="text"
+                  placeholder="e.g. Pearl White"
+                  formControlName="color"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        }
 
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label">Make / Brand</label>
-            <input
-              class="field-input"
-              type="text"
-              placeholder="e.g. Toyota"
-              [(ngModel)]="form.make"
-            />
-          </div>
-          <div class="field">
-            <label class="field-label">Model</label>
-            <input
-              class="field-input"
-              type="text"
-              placeholder="e.g. Vios"
-              [(ngModel)]="form.model"
-            />
-          </div>
-          <div class="field field--sm">
-            <label class="field-label">Year</label>
-            <input
-              class="field-input"
-              type="number"
-              placeholder="2019"
-              [(ngModel)]="form.year"
-              min="1980"
-              [max]="currentYear"
-            />
-          </div>
-        </div>
+        <!-- STEP 1: Mileage & Service -->
+        @if (currentStep === 1) {
+          <div formGroupName="mileAge">
+            <div class="step-panel" [@stepAnim]>
+              <div class="section-label">Mileage & Service Info</div>
 
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label">Plate Number</label>
-            <input
-              class="field-input field-input--mono"
-              type="text"
-              placeholder="ABC-1234"
-              [(ngModel)]="form.plate"
-            />
+              <div class="form-row">
+                <div class="field">
+                  <app-form-field
+                    label="Current Mileage"
+                    [control]="vehicleForm.get('mileAge.mile')!"
+                  />
+                  <div class="input-with-unit">
+                    <input class="field-input" type="text" placeholder="0" formControlName="mile" />
+                    <span class="input-unit">km</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field-label">Fuel Type</label>
+                  <div class="select-wrapper">
+                    <select class="field-input field-select" formControlName="fuelType">
+                      @for (fuelType of fuelTypes; track fuelTypes) {
+                        <option value="{{ fuelType.value }}">{{ fuelType.label }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="field">
+                  <app-form-field
+                    label="Last Oil Change Mileage"
+                    [control]="vehicleForm.get('mileAge.lastOilChangeMileage')!"
+                  />
+                  <div class="input-with-unit">
+                    <input
+                      class="field-input"
+                      type="number"
+                      placeholder="40000"
+                      min="0"
+                      formControlName="lastOilChangeMileage"
+                    />
+                    <span class="input-unit">km</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <app-form-field
+                    label="Oil Change Interval"
+                    [control]="vehicleForm.get('mileAge.oilChangeInterval')!"
+                  />
+                  <div class="input-with-unit">
+                    <input
+                      class="field-input"
+                      type="number"
+                      placeholder="5000"
+                      min="0"
+                      formControlName="oilChangeInterval"
+                    />
+                    <span class="input-unit">km</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="field">
+                  <app-form-field
+                    label="Last Service Date"
+                    [control]="vehicleForm.get('mileAge.lastServiceDate')!"
+                  />
+                  <input
+                    class="field-input field-input--mono"
+                    type="date"
+                    formControlName="lastServiceDate"
+                  />
+                </div>
+                <div class="field">
+                  <app-form-field
+                    label="Next Scheduled Service"
+                    [control]="vehicleForm.get('mileAge.nextServiceDate')!"
+                  />
+                  <input
+                    class="field-input field-input--mono"
+                    type="date"
+                    formControlName="nextServiceDate"
+                  />
+                </div>
+              </div>
+
+              <!-- Oil change progress preview -->
+              @if (oilChangeProgress !== null) {
+                <div class="progress-preview">
+                  <div class="progress-header">
+                    <span class="progress-label">Oil Change Progress</span>
+                    <span
+                      class="progress-pct"
+                      [class.warn]="oilChangeProgress > 75"
+                      [class.bad]="oilChangeProgress > 100"
+                    >
+                      {{ oilChangeProgress | number: '1.0-0' }}%
+                    </span>
+                  </div>
+                  <div class="progress-bar">
+                    <div
+                      class="progress-fill"
+                      [style.width.%]="oilChangeProgress > 100 ? 100 : oilChangeProgress"
+                      [class.warn]="oilChangeProgress > 75"
+                      [class.bad]="oilChangeProgress > 100"
+                    ></div>
+                  </div>
+                  <div class="progress-sub">
+                    {{
+                      vehicleForm.get('mileAge.mile')!.value -
+                        vehicleForm.get('mileAge.lastOilChangeMileage')!.value | number
+                    }}
+                    km since last change ·
+                    {{
+                      vehicleForm.get('mileAge.oilChangeInterval')!.value -
+                        (vehicleForm.get('mileAge.mile')!.value -
+                          vehicleForm.get('mileAge.lastOilChangeMileage')!.value) | number
+                    }}
+                    km remaining
+                  </div>
+                </div>
+              }
+            </div>
           </div>
-          <div class="field">
-            <label class="field-label">Color</label>
-            <input
-              class="field-input"
-              type="text"
-              placeholder="e.g. Pearl White"
-              [(ngModel)]="form.color"
-            />
+        }
+
+        <!-- STEP 2: Review & Confirm -->
+        @if (currentStep === 2) {
+          <div class="step-panel" [@stepAnim]>
+            <div class="section-label">Review Before Saving</div>
+
+            <div class="review-grid">
+              <div class="review-card">
+                <div class="review-card-title">Vehicle Identity</div>
+                <div class="review-row">
+                  <span class="review-key">Nickname</span>
+                  <span class="review-val">{{
+                    vehicleForm.get('identity.nickName')!.value || '—'
+                  }}</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Type</span>
+                  <span class="review-val"
+                    >{{ getTypeIcon() }}
+                    {{ vehicleForm.get('identity.vehicleType')!.value || '—' }}</span
+                  >
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Make & Model</span>
+                  <span class="review-val"
+                    >{{ vehicleForm.get('identity.year')!.value }}
+                    {{ vehicleForm.get('identity.make')!.value }}
+                    {{ vehicleForm.get('identity.model')!.value }}</span
+                  >
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Plate</span>
+                  <span class="review-val review-mono">{{
+                    vehicleForm.get('identity.plateNumber')!.value || '—'
+                  }}</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Color</span>
+                  <span class="review-val">{{
+                    vehicleForm.get('identity.color')!.value || '—'
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="review-card">
+                <div class="review-card-title">Service Info</div>
+                <div class="review-row">
+                  <span class="review-key">Current Mileage</span>
+                  <span class="review-val review-mono"
+                    >{{ vehicleForm.get('mileAge.mile')!.value | number }} km</span
+                  >
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Fuel Type</span>
+                  <span class="review-val">{{
+                    vehicleForm.get('mileAge.fuelType')!.value || '—'
+                  }}</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Last Oil Change</span>
+                  <span class="review-val review-mono"
+                    >{{ vehicleForm.get('mileAge.lastOilChangeMileage')!.value | number }} km</span
+                  >
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Oil Interval</span>
+                  <span class="review-val review-mono"
+                    >every
+                    {{ vehicleForm.get('mileAge.oilChangeInterval')!.value | number }} km</span
+                  >
+                </div>
+                <div class="review-row">
+                  <span class="review-key">Next Service</span>
+                  <span class="review-val review-mono">{{
+                    vehicleForm.get('mileAge.nextServiceDate')!.value || '—'
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status preview pill -->
+            <div class="status-preview">
+              <span class="status-preview-label">Computed Status —</span>
+              <span class="pill" [class]="computedStatus">{{ computedStatusLabel }}</span>
+            </div>
           </div>
-        </div>
+        }
       </div>
+    </form>
 
-      <!-- STEP 1: Mileage & Service -->
-      <div class="step-panel" *ngIf="currentStep === 1" [@stepAnim]>
-        <div class="section-label">Mileage & Service Info</div>
-
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label">Current Mileage</label>
-            <div class="input-with-unit">
-              <input
-                class="field-input"
-                type="number"
-                placeholder="42000"
-                [(ngModel)]="form.mileage"
-                min="0"
-              />
-              <span class="input-unit">mi</span>
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label">Fuel Type</label>
-            <div class="select-wrapper">
-              <select class="field-input field-select" [(ngModel)]="form.fuelType">
-                <option value="">Select fuel type</option>
-                <option value="gasoline">Gasoline</option>
-                <option value="diesel">Diesel</option>
-                <option value="electric">Electric</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="lpg">LPG</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label">Last Oil Change Mileage</label>
-            <div class="input-with-unit">
-              <input
-                class="field-input"
-                type="number"
-                placeholder="40000"
-                [(ngModel)]="form.lastOilChangeMileage"
-                min="0"
-              />
-              <span class="input-unit">mi</span>
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label">Oil Change Interval</label>
-            <div class="input-with-unit">
-              <input
-                class="field-input"
-                type="number"
-                placeholder="5000"
-                [(ngModel)]="form.oilChangeInterval"
-                min="0"
-              />
-              <span class="input-unit">mi</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label">Last Service Date</label>
-            <input
-              class="field-input field-input--mono"
-              type="date"
-              [(ngModel)]="form.lastServiceDate"
-            />
-          </div>
-          <div class="field">
-            <label class="field-label">Next Scheduled Service</label>
-            <input
-              class="field-input field-input--mono"
-              type="date"
-              [(ngModel)]="form.nextServiceDate"
-            />
-          </div>
-        </div>
-
-        <!-- Oil change progress preview -->
-        <div class="progress-preview" *ngIf="oilChangeProgress !== null">
-          <div class="progress-header">
-            <span class="progress-label">Oil Change Progress</span>
-            <span class="progress-pct" [class.warn]="oilChangeProgress > 75" [class.bad]="oilChangeProgress > 100">
-              {{ oilChangeProgress | number:'1.0-0' }}%
-            </span>
-          </div>
-          <div class="progress-bar">
-            <div
-              class="progress-fill"
-              [style.width.%]="oilChangeProgress > 100 ? 100 : oilChangeProgress"
-              [class.warn]="oilChangeProgress > 75"
-              [class.bad]="oilChangeProgress > 100"
-            ></div>
-          </div>
-          <div class="progress-sub">
-            {{ form.mileage - form.lastOilChangeMileage | number }} mi since last change
-            · {{ form.oilChangeInterval - (form.mileage - form.lastOilChangeMileage) | number }} mi remaining
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 2: Review & Confirm -->
-      <div class="step-panel" *ngIf="currentStep === 2" [@stepAnim]>
-        <div class="section-label">Review Before Saving</div>
-
-        <div class="review-grid">
-          <div class="review-card">
-            <div class="review-card-title">Vehicle Identity</div>
-            <div class="review-row">
-              <span class="review-key">Nickname</span>
-              <span class="review-val">{{ form.nickname || '—' }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Type</span>
-              <span class="review-val">{{ getTypeIcon() }} {{ form.type || '—' }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Make & Model</span>
-              <span class="review-val">{{ form.year }} {{ form.make }} {{ form.model }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Plate</span>
-              <span class="review-val review-mono">{{ form.plate || '—' }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Color</span>
-              <span class="review-val">{{ form.color || '—' }}</span>
-            </div>
-          </div>
-
-          <div class="review-card">
-            <div class="review-card-title">Service Info</div>
-            <div class="review-row">
-              <span class="review-key">Current Mileage</span>
-              <span class="review-val review-mono">{{ form.mileage | number }} mi</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Fuel Type</span>
-              <span class="review-val">{{ form.fuelType || '—' }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Last Oil Change</span>
-              <span class="review-val review-mono">{{ form.lastOilChangeMileage | number }} mi</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Oil Interval</span>
-              <span class="review-val review-mono">every {{ form.oilChangeInterval | number }} mi</span>
-            </div>
-            <div class="review-row">
-              <span class="review-key">Next Service</span>
-              <span class="review-val review-mono">{{ form.nextServiceDate || '—' }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Status preview pill -->
-        <div class="status-preview">
-          <span class="status-preview-label">Computed Status —</span>
-          <span class="pill" [class]="computedStatus">{{ computedStatusLabel }}</span>
-        </div>
-      </div>
-
-    </div><!-- /modal-body -->
+    <!-- /modal-body -->
 
     <!-- Footer -->
     <div class="modal-footer">
       <button class="btn btn-ghost" (click)="onClose()">Cancel</button>
       <div class="footer-right">
-        <button
-          class="btn btn-ghost"
-          *ngIf="currentStep > 0"
-          (click)="prevStep()"
-        >← Back</button>
-        <button
-          class="btn btn-primary"
-          *ngIf="currentStep < steps.length - 1"
-          (click)="nextStep()"
-          [disabled]="!isStepValid()"
-        >Continue →</button>
-        <button
-          class="btn btn-primary btn-save"
-          *ngIf="currentStep === steps.length - 1"
-          (click)="onSubmit()"
-        >
-          <span>＋</span> Save Vehicle
-        </button>
+        @if (currentStep > 0) {
+          <button class="btn btn-ghost" (click)="prevStep()">← Back</button>
+        }
+        @if (currentStep < steps.length - 1) {
+          <button class="btn btn-primary" (click)="nextStep()" [disabled]="!isStepValid()">
+            Continue →
+          </button>
+        }
+        @if (currentStep === steps.length - 1) {
+          <button class="btn btn-primary btn-save" (click)="onSubmit()">
+            <span>＋</span> Save Vehicle
+          </button>
+        }
       </div>
     </div>
-
   </div>
 </div>

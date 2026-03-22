@@ -1,42 +1,60 @@
 {
   "vehicles": [
     {
-      "id": 1,
+      "id": "1",
       "icon": "🚙",
-      "name": "Daily Driver",
+      "nickName": "Grab",
       "year": 2019,
       "model": "Toyota Vios",
-      "plate": "ABC-1234",
+      "plateNumber": "ABC-1234",
       "status": "ok",
       "statusLabel": "Good",
-      "mileage": "42,300 km"
+      "mile": "42,300 km",
+      "vehicleType": "car",
+      "make": "Toyota",
+      "color": "Red",
+      "fuelType": "Gasoline",
+      "nextServiceDate": "2026-06-20",
+      "health": 85
     },
     {
-      "id": 2,
+      "id": "2",
       "icon": "🚐",
-      "name": "Family Van",
-      "year": 2017,
-      "model": "Toyota Hi-Ace",
-      "plate": "XYZ-5678",
+      "nickName": "Adventure",
+      "year": 2016,
+      "model": "Adventure GLX",
+      "plateNumber": "XYZ-5678",
       "status": "warn",
       "statusLabel": "Due Soon",
-      "mileage": "78,100 km"
+      "mile": "116,100 km",
+      "vehicleType": "suv",
+      "make": "Mitsubishi",
+      "color": "Blue",
+      "fuelType": "Diesel",
+      "health": 75,
+      "nextServiceDate": "2026-04-30"
     },
     {
-      "id": 3,
+      "id": "3",
       "icon": "🏍",
-      "name": "Weekend Bike",
+      "nickName": "Click",
       "year": 2020,
       "model": "Honda Click 125",
-      "plate": "MNO-9012",
+      "plateNumber": "MNO-9012",
       "status": "bad",
       "statusLabel": "Overdue",
-      "mileage": "7000km"
+      "mile": "7000km",
+      "vehicleType": "motorcycle",
+      "make": "Yamaha",
+      "color": "Black",
+      "fuelType": "Gasoline",
+      "health": 40,
+      "nextServiceDate": "2025-12-01"
     }
   ],
   "maintenance": [
     {
-      "id": 1,
+      "id": "1",
       "vehicleId": 1,
       "type": "Oil Change",
       "date": "2024-11-15",
@@ -47,12 +65,13 @@
   ],
   "reminders": [
     {
-      "id": 1,
+      "id": "1",
       "vehicleId": 1,
       "type": "PMS",
       "dueDate": "2025-03-01",
       "dueMileage": 47000,
       "isDone": false
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

@@ -1,0 +1,954 @@
+// Design tokens
+:host {
+  --bg: #0f1117;
+  --surface: #161b25;
+  --surface2: #1e2535;
+  --border: #2a3347;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --green: #22c55e;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+// Noise overlay
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+//   Color utility classes (used instead of Tailwind for dynamic bindings)
+// These are set via boolean [class.x] bindings so they're always in the CSS.
+.c-amber {
+  color: var(--amber) !important;
+}
+.c-green {
+  color: var(--green) !important;
+}
+.c-red {
+  color: var(--red) !important;
+}
+
+// Animations
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes growBar {
+  from {
+    width: 0 !important;
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+// Sidebar
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  inset-block: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--amber);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+
+.nav-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 12px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+
+  &:hover {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  &.active {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--amber);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      bottom: 20%;
+      width: 3px;
+      background: var(--amber);
+      border-radius: 0 3px 3px 0;
+    }
+  }
+}
+
+.badge-alert {
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--amber), #d97706);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #000;
+}
+
+.user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.user-plan {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+//   Main
+.main {
+  margin-left: 220px;
+  flex: 1;
+  padding: 32px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+//   Page header
+.page-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  color: var(--text);
+}
+
+.page-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+//   Buttons ────────────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.btn-primary {
+  background: var(--amber);
+  color: #000;
+  font-weight: 700;
+  &:hover {
+    background: #fbbf24;
+  }
+}
+
+.btn-ghost {
+  background: var(--surface2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  &:hover {
+    color: var(--text);
+    border-color: var(--muted);
+  }
+}
+
+//   Fleet summary strip ────────────────────────────────────────────────────
+// FIX: Was using Tailwind grid-cols-4 which needs Tailwind config.
+//      Moved entirely to SCSS for reliability.
+.fleet-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.fleet-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 18px 24px;
+  border-right: 1px solid var(--border);
+
+  &.no-border {
+    border-right: none;
+  }
+}
+
+.fleet-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.fleet-stat-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.fleet-stat-sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+// Toolbar
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  padding: 9px 12px 9px 32px;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+
+  &::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+  }
+  &:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.08);
+  }
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+// FIX: filter-pill active states moved fully to SCSS so they're always
+//      present in the bundle — not dependent on Tailwind purge.
+.filter-pill {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.15s;
+
+  &:hover:not(.active) {
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  &.active {
+    color: #000;
+    font-weight: 700;
+  }
+  &.active.f-all {
+    background: var(--amber);
+  }
+  &.active.f-ok {
+    background: var(--green);
+  }
+  &.active.f-soon {
+    background: var(--amber);
+  }
+  &.active.f-overdue {
+    background: var(--red);
+  }
+}
+
+.sort-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 8px 32px 8px 12px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.15s;
+
+  option {
+    background: var(--surface2);
+  }
+  &:focus {
+    border-color: var(--amber);
+  }
+}
+
+.view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.view-btn {
+  width: 32px;
+  height: 28px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+
+  &:hover {
+    color: var(--text);
+  }
+  &.active {
+    background: var(--surface2);
+    color: var(--text);
+  }
+}
+
+// Vehicle grid
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+// Vehicle card
+.vehicle-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    border-color: rgba(245, 158, 11, 0.4);
+    transform: translateY(-3px);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(245, 158, 11, 0.06);
+
+    .vehicle-thumb {
+      transform: scale(1.08);
+    }
+    .card-actions {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+// Colored top accent line per status
+.card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 14px 14px 0 0;
+
+  &.ok {
+    background: linear-gradient(90deg, var(--green), transparent);
+  }
+  &.soon {
+    background: linear-gradient(90deg, var(--amber), transparent);
+  }
+  &.overdue {
+    background: linear-gradient(90deg, var(--red), transparent);
+  }
+}
+
+// Vehicle icon thumbnail
+.vehicle-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+
+  &.ok {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+  &.soon {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+  &.overdue {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+}
+
+.card-nickname {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.card-year-model {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+// Status pill
+.status-pill {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+
+  &.ok {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--green);
+  }
+  &.soon {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--amber);
+  }
+  &.overdue {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--red);
+  }
+}
+
+// Plate tag
+.plate-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+// Health bar
+.health-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.health-pct {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.health-track {
+  height: 6px;
+  background: var(--surface2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.health-fill {
+  height: 100%;
+  border-radius: 99px;
+  animation: growBar 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: width 0.4s ease;
+
+  // FIX: health-bar color used to be driven by Tailwind text-* class names
+  //      on the fill div, which doesn't affect background-color.
+  //      Now uses explicit SCSS classes that set background.
+  &.c-green {
+    background: var(--green);
+  }
+  &.c-amber {
+    background: var(--amber);
+  }
+  &.c-red {
+    background: var(--red);
+  }
+}
+
+// Mini stats
+.mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 10px;
+
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
+}
+
+.mini-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.mini-stat-value {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+// Next service preview row
+.next-service-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.next-service-name {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.next-service-date {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+// Status dot — FIX: removed runtime Tailwind arbitrary shadow classes,
+// replaced with static SCSS glow rules that are always in the bundle.
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.dot-red {
+    background: var(--red);
+    box-shadow: 0 0 6px var(--red);
+  }
+  &.dot-amber {
+    background: var(--amber);
+    box-shadow: 0 0 6px var(--amber);
+  }
+  &.dot-green {
+    background: var(--green);
+  }
+}
+
+// Hover action bar
+.card-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: linear-gradient(to top, rgba(22, 27, 37, 0.98) 60%, transparent);
+  padding: 20px 20px 16px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 7px 0;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s;
+  color: var(--muted);
+  background: var(--surface2);
+
+  &:first-child {
+    border-radius: 7px 0 0 7px;
+    border-right: 1px solid var(--border);
+  }
+  &:last-child {
+    border-radius: 0 7px 7px 0;
+    border-left: 1px solid var(--border);
+  }
+  &:not(:first-child):not(:last-child) {
+    border-right: 1px solid var(--border);
+  }
+
+  &:hover {
+    color: var(--text);
+    background: #242d3f;
+  }
+  &.accent {
+    color: var(--amber);
+    &:hover {
+      background: rgba(245, 158, 11, 0.12);
+    }
+  }
+  &.danger {
+    color: var(--red);
+    &:hover {
+      background: rgba(239, 68, 68, 0.12);
+    }
+  }
+}
+
+//   Empty state
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 0;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  opacity: 0.15;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.empty-sub {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+//   List view
+.list-container {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+// Column width definitions — single source of truth via CSS custom properties
+// used by both the header and the rows.
+$col-vehicle: 280px;
+$col-plate: 110px;
+$col-status: 90px;
+$col-health: 100px;
+$col-mileage: 110px;
+$col-services: 80px;
+$col-actions: 110px;
+
+.lcol-vehicle {
+  width: $col-vehicle;
+  flex-shrink: 0;
+}
+.lcol-plate {
+  width: $col-plate;
+  flex-shrink: 0;
+}
+.lcol-status {
+  width: $col-status;
+  flex-shrink: 0;
+}
+.lcol-health {
+  width: $col-health;
+  flex-shrink: 0;
+}
+.lcol-mileage {
+  width: $col-mileage;
+  flex-shrink: 0;
+}
+.lcol-services {
+  width: $col-services;
+  flex-shrink: 0;
+}
+.lcol-next {
+  flex: 1;
+  min-width: 0;
+}
+.lcol-actions {
+  width: $col-actions;
+  flex-shrink: 0;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(42, 51, 71, 0.5);
+  cursor: pointer;
+  transition: background 0.12s;
+  gap: 0;
+
+  &:hover {
+    background: rgba(30, 37, 53, 0.7);
+  }
+  &.last-row {
+    border-bottom: none;
+  }
+}
+
+.list-nickname {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.list-plate {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+.list-health-pct {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.list-mono {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.vehicle-thumb-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+
+  &.ok {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+  &.soon {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+  &.overdue {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  font-size: 0.75rem;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--muted);
+  }
+  &.accent:hover {
+    color: var(--amber);
+    border-color: rgba(245, 158, 11, 0.4);
+  }
+  &.danger:hover {
+    color: var(--red);
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+}
+
+//   Scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.todo-font {
+  font-size: 0.65rem;
+}
