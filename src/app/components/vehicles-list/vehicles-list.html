@@ -5,7 +5,7 @@
     <div>
       <h1 class="page-title">My Fleet</h1>
       <p class="page-subtitle">
-        {{ filteredVehicles().length }} of {{ vehicles.length }} vehicles
+        {{ filteredVehicles().length }} of {{ allVehicles().length }} vehicles
         @if (activeFilter() !== 'all') {
           · filtered by <span class="text-amber-400">{{ activeFilter() }}</span>
         }
@@ -41,7 +41,7 @@
   <div class="mb-6 flex flex-wrap items-center gap-3 fade-up" style="animation-delay: 0.1s">
     <!-- Search -->
     <div class="relative min-w-[200px] flex-1">
-      <span class="search-icon">⌕</span>
+      <!-- <span class="search-icon">⌕</span> -->
       <input
         class="search-input pl-8"
         type="text"
@@ -56,49 +56,50 @@
       FIX 3: [class]="..." on an element with existing classes replaces ALL
               of them. Use [class.active] + [class.f-*] as separate bindings.
     -->
-    <div class="filter-group">
-      @for (f of filters; track f.value) {
+    <div class="filter-section">
+      <div class="filter-group">
+        @for (f of filters; track f.value) {
+          <button
+            class="filter-pill"
+            [class.active]="activeFilter() === f.value"
+            [class.f-all]="activeFilter() === f.value && f.value === 'all'"
+            [class.f-ok]="activeFilter() === f.value && f.value === 'ok'"
+            [class.f-soon]="activeFilter() === f.value && f.value === 'warn'"
+            [class.f-overdue]="activeFilter() === f.value && f.value === 'bad'"
+            (click)="setFilter(f.value)"
+          >
+            {{ f.label }}
+          </button>
+        }
+      </div>
+
+      <!-- View toggle -->
+      <div class="view-toggle">
+        <!-- Sort -->
+        <select class="sort-select" [value]="sortBy()" (change)="onSort($event)">
+          <option value="nickname">Name A–Z</option>
+          <option value="status">Status</option>
+          <option value="mileage">Mileage</option>
+          <option value="nextService">Next Service</option>
+          <option value="year">Year</option>
+        </select>
         <button
-          class="filter-pill"
-          [class.active]="activeFilter() === f.value"
-          [class.f-all]="activeFilter() === f.value && f.value === 'all'"
-          [class.f-ok]="activeFilter() === f.value && f.value === 'ok'"
-          [class.f-soon]="activeFilter() === f.value && f.value === 'warn'"
-          [class.f-overdue]="activeFilter() === f.value && f.value === 'bad'"
-          (click)="setFilter(f.value)"
+          class="view-btn"
+          [class.active]="viewMode() === 'grid'"
+          (click)="viewMode.set('grid')"
+          aria-label="Grid view"
         >
-          {{ f.label }}
+          ⊞
         </button>
-      }
-    </div>
-
-    <!-- Sort -->
-    <select class="sort-select" [value]="sortBy()" (change)="onSort($event)">
-      <option value="nickname">Name A–Z</option>
-      <option value="status">Status</option>
-      <option value="mileage">Mileage</option>
-      <option value="nextService">Next Service</option>
-      <option value="year">Year</option>
-    </select>
-
-    <!-- View toggle -->
-    <div class="view-toggle">
-      <button
-        class="view-btn"
-        [class.active]="viewMode() === 'grid'"
-        (click)="viewMode.set('grid')"
-        aria-label="Grid view"
-      >
-        ⊞
-      </button>
-      <button
-        class="view-btn"
-        [class.active]="viewMode() === 'list'"
-        (click)="viewMode.set('list')"
-        aria-label="List view"
-      >
-        ☰
-      </button>
+        <button
+          class="view-btn"
+          [class.active]="viewMode() === 'list'"
+          (click)="viewMode.set('list')"
+          aria-label="List view"
+        >
+          ☰
+        </button>
+      </div>
     </div>
   </div>
 

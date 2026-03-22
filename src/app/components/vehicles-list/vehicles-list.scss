@@ -201,10 +201,10 @@
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--muted);
-  margin-top: 4px;
+  margin: 6px 0px 12px 0;
 }
 
-//   Buttons ────────────────────────────────────────────────────────────────
+//   Buttons
 .btn {
   display: inline-flex;
   align-items: center;
@@ -238,7 +238,7 @@
   }
 }
 
-//   Fleet summary strip ────────────────────────────────────────────────────
+// Fleet summary strip
 // FIX: Was using Tailwind grid-cols-4 which needs Tailwind config.
 //      Moved entirely to SCSS for reliability.
 .fleet-strip {
@@ -326,7 +326,9 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 4px;
+  padding: 9px 6px;
+  width: 100%;
+  margin-right: 3px;
 }
 
 // FIX: filter-pill active states moved fully to SCSS so they're always
@@ -370,7 +372,7 @@
 
 .sort-select {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid #161b25;
   border-radius: 8px;
   color: var(--muted);
   font-family: var(--font-mono);
@@ -951,4 +953,11 @@ $col-actions: 110px;
 
 .todo-font {
   font-size: 0.65rem;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 3px 0 24px 0;
 }

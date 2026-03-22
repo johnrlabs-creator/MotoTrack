@@ -9,7 +9,12 @@
   <nav class="nav">
     <div class="nav-label">Main</div>
     @for (nav of sideNavItems; track nav.id) {
-      <a class="nav-item" [class.active]="activeNav() === nav.id" (click)="setNav(nav.id)">
+      <a
+        class="nav-item"
+        [class.active]="activeNav() === nav.id"
+        (click)="setNav(nav.id)"
+        [class.disabled]="nav.disabled"
+      >
         <span class="nav-icon">
           {{ nav.iconType }}
         </span>
@@ -22,10 +27,14 @@
     }
 
     <div class="nav-label" style="margin-top: 8px">Reports</div>
-    <a class="nav-item" [class.active]="activeNav() === 'cost'" (click)="setNav('cost')">
+    <a class="nav-item disabled" [class.active]="activeNav() === 'cost'" (click)="setNav('cost')">
       <span class="nav-icon">📊</span> Cost Analysis
     </a>
-    <a class="nav-item" [class.active]="activeNav() === 'export'" (click)="setNav('export')">
+    <a
+      class="nav-item disabled"
+      [class.active]="activeNav() === 'export'"
+      (click)="setNav('export')"
+    >
       <span class="nav-icon">⬇</span> Export CSV
     </a>
   </nav>
@@ -35,7 +44,7 @@
       <div class="avatar">{{ userInitial }}</div>
       <div class="user-info">
         <div class="user-name">{{ userName }}</div>
-        <div class="user-plan">{{ userPlan }}</div>
+        <div class="user-plan">{{ userNickname }}</div>
       </div>
     </div>
   </div>

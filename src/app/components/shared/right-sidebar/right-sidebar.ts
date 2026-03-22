@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { VehicleApiService } from '../../../core/services/vehicle-api-service';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Vehicle } from '../../../core/interfaces/vehicle.interface';
+import { disabled } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -12,9 +13,9 @@ import { Vehicle } from '../../../core/interfaces/vehicle.interface';
 })
 export class RightSidebar implements OnInit {
   // START TODO: Static values to be replaced with dynamic data from login API
-  userName = 'R';
+  userName = 'Ron';
   userInitial = 'R';
-  userPlan = 'Free Plan';
+  userNickname = 'F1 Racer';
   // END TODO
 
   vehiclesForReminder: Vehicle[] = [];
@@ -27,8 +28,8 @@ export class RightSidebar implements OnInit {
   sideNavItems = [
     { id: 'dashboard', iconType: '◈', label: 'Dashboard' },
     { id: 'vehicles', iconType: '🚗', label: 'Vehicles' },
-    { id: 'log', iconType: '📋', label: 'Maintenance Log' },
-    { id: 'reminders', iconType: '🔔', label: 'Reminders' },
+    { id: 'reminders', iconType: '🔔', label: 'Reminders', disabled: true }, // TODO: disabled while feature not complete
+    { id: 'log', iconType: '📋', label: 'Maintenance Log', disabled: true }, // TODO: disabled while feature not complete
   ];
 
   protected readonly sideNavIcon = computed(() => {
@@ -43,6 +44,9 @@ export class RightSidebar implements OnInit {
 
   setNav(nav: string): void {
     console.log('sidebar nav: ', nav);
+
+    // TODO: Disable these until the features are implemented
+    if (nav === 'log' || nav === 'reminders') return;
 
     this.activeNav.set(nav);
     this.router.navigate([`/${nav}`]);

@@ -30,6 +30,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+  dateToday: string = '';
+
   stats = signal<DashboardStats>({
     totalVehicles: 0,
     overdueServices: 2, // TODO
@@ -143,6 +145,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.getVehicles();
+    this.getDateToday();
+  }
+
+  getDateToday(): void {
+    this.dateToday = new Date().toLocaleDateString('en-PH', {
+      month: 'long',
+      year: 'numeric',
+      day: 'numeric',
+    });
   }
 
   getVehicles(): void {
