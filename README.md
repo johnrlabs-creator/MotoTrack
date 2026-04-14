@@ -62,6 +62,8 @@ For more information on using the Angular CLI, including detailed command refere
 
 json-server --watch db.json --port 3000
 
+## To use mock, set useMock in environment.ts to true
+
 ## Icon pack is using Lucide
 
 (https://lucide.dev/)

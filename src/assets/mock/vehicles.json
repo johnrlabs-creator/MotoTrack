@@ -1,0 +1,72 @@
+{
+  "vehicles": [
+    {
+      "id": "1",
+      "icon": "🚙",
+      "nickName": "Grab",
+      "year": 2019,
+      "model": "Toyota Vios",
+      "plateNumber": "ABC-1234",
+      "status": "ok",
+      "statusLabel": "Good",
+      "mile": "42,300 km",
+      "vehicleType": "car",
+      "make": "Toyota",
+      "color": "Red",
+      "fuelType": "Gasoline",
+      "nextServiceDate": "2026-06-20",
+      "health": 85
+    },
+    {
+      "id": "2",
+      "icon": "🚐",
+      "nickName": "Adventure",
+      "year": 2016,
+      "model": "Adventure GLX",
+      "plateNumber": "XYZ-5678",
+      "status": "warn",
+      "statusLabel": "Due Soon",
+      "mile": "116,100 km",
+      "vehicleType": "suv",
+      "make": "Mitsubishi",
+      "color": "Blue",
+      "fuelType": "Diesel",
+      "health": 75,
+      "nextServiceDate": "2026-04-30"
+    },
+    {
+      "id": "3",
+      "icon": "🏍",
+      "nickName": "Click",
+      "year": 2020,
+      "model": "Honda Click 125",
+      "plateNumber": "MNO-9012",
+      "status": "bad",
+      "statusLabel": "Overdue",
+      "mile": "7000km",
+      "vehicleType": "motorcycle",
+      "make": "Yamaha",
+      "color": "Black",
+      "fuelType": "Gasoline",
+      "health": 40,
+      "nextServiceDate": "2025-12-01"
+    },
+    {
+      "id": 1773648978199,
+      "icon": "🚗",
+      "nickName": "wigo",
+      "year": 2019,
+      "model": "Wigo 1.0 G",
+      "plateNumber": "asd2343",
+      "status": "warn",
+      "statusLabel": "Due Soon",
+      "mile": "30000 mi",
+      "vehicleType": "car",
+      "make": "Toyota",
+      "color": "yel",
+      "fuelType": "gasoline",
+      "health": 0,
+      "nextServiceDate": "2026-03-30"
+    }
+  ]
+}
