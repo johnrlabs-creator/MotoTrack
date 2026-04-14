@@ -3,106 +3,74 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  OnInit,
+  inject,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { VehicleFormData } from '../../../core/interfaces/vehicle.interface';
+import { steps } from '../../../core/constants/modal.constants';
+import { FUEL_TYPES, VEHICLE_TYPES } from '../../../core/constants/vehicle.constants';
 import {
-  trigger,
-  transition,
-  style,
-  animate,
-  query,
-  animateChild,
-} from '@angular/animations';
-import { VehicleFormData } from '../../../core/models/vehicle.interface';
-
-// ── Animations ────────────────────────────────────────────────────────────
-
-const backdropAnim = trigger('backdropAnim', [
-  transition(':enter', [
-    style({ opacity: 0 }),
-    animate('180ms ease', style({ opacity: 1 })),
-  ]),
-  transition(':leave', [
-    animate('150ms ease', style({ opacity: 0 })),
-  ]),
-]);
-
-const modalAnim = trigger('modalAnim', [
-  transition(':enter', [
-    style({ opacity: 0, transform: 'translateY(24px) scale(0.97)' }),
-    animate('240ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0) scale(1)' })),
-  ]),
-  transition(':leave', [
-    animate('160ms ease', style({ opacity: 0, transform: 'translateY(12px) scale(0.98)' })),
-  ]),
-]);
-
-const stepAnim = trigger('stepAnim', [
-  transition(':enter', [
-    style({ opacity: 0, transform: 'translateX(16px)' }),
-    animate('220ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateX(0)' })),
-  ]),
-]);
-
-// ── Component ─────────────────────────────────────────────────────────────
+  debounceTime,
+  distinct,
+  distinctUntilChanged,
+  identity,
+  Subject,
+  take,
+  takeUntil,
+} from 'rxjs';
+import { FormField } from '../form-field/form-field';
 
 @Component({
   selector: 'app-add-vehicle-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, FormField],
   templateUrl: './modal.html',
   styleUrls: ['./modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [backdropAnim, modalAnim, stepAnim],
 })
-export class ModalComponent {
-
+export class ModalComponent implements OnInit, OnDestroy {
   /** Emitted when the modal should be closed (cancel or successful save) */
   @Output() closed = new EventEmitter<void>();
 
   /** Emitted with the completed form data when user clicks Save */
   @Output() vehicleAdded = new EventEmitter<VehicleFormData>();
 
-  // ── Step state ────────────────────────────────────────────────────────────
   currentStep = 0;
-  readonly steps = ['Identity', 'Mileage', 'Review'];
-
-  // ── Vehicle type options ──────────────────────────────────────────────────
-  readonly vehicleTypes = [
-    { value: 'car',        label: 'Car',     icon: '🚗' },
-    { value: 'suv',        label: 'SUV',     icon: '🚙' },
-    { value: 'van',        label: 'Van',     icon: '🚐' },
-    { value: 'truck',      label: 'Truck',   icon: '🛻' },
-    { value: 'motorcycle', label: 'Moto',    icon: '🏍' },
-  ];
-
+  readonly steps = steps;
+  readonly vehicleTypes = VEHICLE_TYPES;
+  readonly fuelTypes = FUEL_TYPES;
   readonly currentYear = new Date().getFullYear();
+  private destroyed$ = new Subject<void>();
 
-  // ── Form data ─────────────────────────────────────────────────────────────
-  form: VehicleFormData = {
-    nickname:             '',
-    type:                 '',
-    make:                 '',
-    model:                '',
-    year:                 null,
-    plate:                '',
-    color:                '',
-    mileage:              0,
-    fuelType:             '',
-    lastOilChangeMileage: 0,
-    oilChangeInterval:    5000,
-    lastServiceDate:      '',
-    nextServiceDate:      '',
-  };
+  fb = inject(FormBuilder);
+  vehicleForm: any; // TODO: FormGroup<VehicleFormData>
 
-  // ── Computed properties ───────────────────────────────────────────────────
+  // TODO: REMOVE THIS DUMMY DATA
+  // form: VehicleFormData = {
+  //   nickname: '',
+  //   type: '',
+  //   make: '',
+  //   model: '',
+  //   year: null,
+  //   plate: '',
+  //   color: '',
+  //   mileage: 0,
+  //   fuelType: '',
+  //   lastOilChangeMileage: 0,
+  //   oilChangeInterval: 5000,
+  //   lastServiceDate: '',
+  //   nextServiceDate: '',
+  // };
 
+  // Computed properties (TODO: DUMMY DATA)
   /** Returns oil change progress as a percentage, or null if inputs are incomplete */
   get oilChangeProgress(): number | null {
-    const { mileage, lastOilChangeMileage, oilChangeInterval } = this.form;
-    if (!mileage || !lastOilChangeMileage || !oilChangeInterval) return null;
-    const driven = mileage - lastOilChangeMileage;
+    const { mile, lastOilChangeMileage, oilChangeInterval } = this.vehicleForm.value.mileAge;
+    if (!mile || !lastOilChangeMileage || !oilChangeInterval) return null;
+    const driven = mile - lastOilChangeMileage;
     return (driven / oilChangeInterval) * 100;
   }
 
@@ -111,7 +79,7 @@ export class ModalComponent {
     const progress = this.oilChangeProgress;
     if (progress === null) return 'ok';
     if (progress > 100) return 'bad';
-    if (progress > 75)  return 'warn';
+    if (progress > 75) return 'warn';
     return 'ok';
   }
 
@@ -120,19 +88,61 @@ export class ModalComponent {
     return map[this.computedStatus];
   }
 
-  // ── Step validation ───────────────────────────────────────────────────────
+  ngOnInit(): void {
+    this.initVehicleForm();
+    this.listenToVehicleFormChanges();
+  }
+
+  private initVehicleForm(): void {
+    this.vehicleForm = this.fb.group({
+      identity: this.fb.group({
+        nickName: ['', Validators.required],
+        vehicleType: ['car', Validators.required],
+        make: ['', Validators.required],
+        model: ['', Validators.required],
+        year: [0, Validators.required],
+        plateNumber: ['', Validators.required],
+        color: [''],
+      }),
+      mileAge: this.fb.group({
+        mile: [0, [Validators.required, Validators.min(0)]],
+        fuelType: ['gasoline', Validators.required],
+        lastOilChangeMileage: [0, [Validators.required, Validators.min(0)]],
+        oilChangeInterval: [5000, [Validators.required, Validators.min(0)]],
+        lastServiceDate: [''],
+        nextServiceDate: [''],
+      }),
+      review: this.fb.group({}),
+    });
+  }
+
+  listenToVehicleFormChanges(): void {
+    this.vehicleForm.valueChanges
+      .pipe(distinctUntilChanged(), debounceTime(500), takeUntil(this.destroyed$))
+      .subscribe((values: any) => {
+        console.log('vehicleForm: ', values);
+      });
+  }
+
+  setVehicleType(type: string): void {
+    this.vehicleForm.get('identity.vehicleType')?.setValue(type);
+  }
+
+  // TODO: START to review old codes
+  // Step validation
 
   isStepValid(): boolean {
-    if (this.currentStep === 0) {
-      return !!(this.form.make && this.form.model && this.form.year && this.form.plate);
-    }
-    if (this.currentStep === 1) {
-      return this.form.mileage > 0;
-    }
+    // TODO: Uncomment once the form is properly set up
+    // if (this.currentStep === 0) {
+    //   return this.vehicleForm.get('identity')?.valid;
+    // }
+    // if (this.currentStep === 1) {
+    //   return this.form.mileage > 0;
+    // }
     return true;
   }
 
-  // ── Navigation ────────────────────────────────────────────────────────────
+  // Navigation
 
   nextStep(): void {
     if (this.currentStep < this.steps.length - 1 && this.isStepValid()) {
@@ -146,13 +156,16 @@ export class ModalComponent {
     }
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
+  // Helpers
 
   getTypeIcon(): string {
-    return this.vehicleTypes.find(t => t.value === this.form.type)?.icon ?? '';
+    return (
+      VEHICLE_TYPES.find((t) => t.value === this.vehicleForm.get('identity.vehicleType')?.value)
+        ?.icon ?? ''
+    );
   }
 
-  // ── Event handlers ────────────────────────────────────────────────────────
+  // Event handlers
 
   onClose(): void {
     this.closed.emit();
@@ -166,7 +179,13 @@ export class ModalComponent {
   }
 
   onSubmit(): void {
-    this.vehicleAdded.emit({ ...this.form });
+    this.vehicleAdded.emit({ ...this.vehicleForm.value });
     this.closed.emit();
+  }
+  // TODO: END to review old codes
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

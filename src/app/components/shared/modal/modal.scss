@@ -1,22 +1,22 @@
-// ── Design tokens (mirrors dashboard) ─────────────────────────────────────
+// Design tokens (mirrors dashboard)
 :host {
-  --bg:           #0f1117;
-  --surface:      #161b25;
-  --surface2:     #1e2535;
-  --surface3:     #242d3f;
-  --border:       #2a3347;
-  --amber:        #f59e0b;
-  --red:          #ef4444;
-  --green:        #22c55e;
-  --blue:         #3b82f6;
-  --text:         #e2e8f0;
-  --muted:        #64748b;
+  --bg: #0f1117;
+  --surface: #161b25;
+  --surface2: #1e2535;
+  --surface3: #242d3f;
+  --border: #2a3347;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --green: #22c55e;
+  --blue: #3b82f6;
+  --text: #e2e8f0;
+  --muted: #64748b;
   --font-display: 'Rajdhani', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
-// ── Backdrop ──────────────────────────────────────────────────────────────
+// Backdrop
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -29,7 +29,7 @@
   padding: 24px;
 }
 
-// ── Modal shell ───────────────────────────────────────────────────────────
+// Modal shell
 .modal {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -55,7 +55,7 @@
   }
 }
 
-// ── Header ─────────────────────────────────────────────────────────────────
+// Header
 .modal-header {
   display: flex;
   align-items: center;
@@ -120,7 +120,7 @@
   }
 }
 
-// ── Step Indicator ─────────────────────────────────────────────────────────
+// Step Indicator
 .step-track {
   display: flex;
   align-items: center;
@@ -178,8 +178,12 @@
   white-space: nowrap;
   transition: color 0.2s;
 
-  .step-item.active & { color: var(--amber); }
-  .step-item.done &   { color: var(--green); }
+  .step-item.active & {
+    color: var(--amber);
+  }
+  .step-item.done & {
+    color: var(--green);
+  }
 }
 
 .step-line {
@@ -188,10 +192,12 @@
   background: var(--border);
   margin: 0 10px;
 
-  .step-item.done & { background: rgba(34, 197, 94, 0.3); }
+  .step-item.done & {
+    background: rgba(34, 197, 94, 0.3);
+  }
 }
 
-// ── Body ──────────────────────────────────────────────────────────────────
+// Body
 .modal-body {
   flex: 1;
   overflow-y: auto;
@@ -199,9 +205,16 @@
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 
-  &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 2px;
+  }
 }
 
 .step-panel {
@@ -220,7 +233,7 @@
   border-bottom: 1px solid var(--border);
 }
 
-// ── Form fields ────────────────────────────────────────────────────────────
+// Form fields
 .form-row {
   display: flex;
   gap: 14px;
@@ -233,7 +246,9 @@
   flex-direction: column;
   gap: 6px;
 
-  &--sm { flex: 0 0 100px; }
+  &--sm {
+    flex: 0 0 100px;
+  }
 }
 
 .field-label {
@@ -254,9 +269,14 @@
   padding: 10px 12px;
   width: 100%;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 
-  &::placeholder { color: var(--muted); opacity: 0.6; }
+  &::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+  }
 
   &:focus {
     border-color: var(--amber);
@@ -270,7 +290,7 @@
   }
 
   // Date input colour fix
-  &[type="date"]::-webkit-calendar-picker-indicator {
+  &[type='date']::-webkit-calendar-picker-indicator {
     filter: invert(0.5);
     cursor: pointer;
   }
@@ -300,7 +320,9 @@
   display: flex;
   align-items: center;
 
-  .field-input { padding-right: 40px; }
+  .field-input {
+    padding-right: 40px;
+  }
 }
 
 .input-unit {
@@ -312,7 +334,7 @@
   pointer-events: none;
 }
 
-// ── Vehicle type picker ────────────────────────────────────────────────────
+// Vehicle type picker
 .type-picker {
   display: flex;
   gap: 8px;
@@ -346,7 +368,9 @@
   }
 }
 
-.type-icon { font-size: 1.2rem; }
+.type-icon {
+  font-size: 1.2rem;
+}
 .type-name {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -354,7 +378,7 @@
   letter-spacing: 0.06em;
 }
 
-// ── Progress bar preview ───────────────────────────────────────────────────
+// Progress bar preview
 .progress-preview {
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -385,8 +409,12 @@
   font-weight: 600;
   color: var(--green);
 
-  &.warn { color: var(--amber); }
-  &.bad  { color: var(--red); }
+  &.warn {
+    color: var(--amber);
+  }
+  &.bad {
+    color: var(--red);
+  }
 }
 
 .progress-bar {
@@ -402,8 +430,12 @@
   border-radius: 99px;
   transition: width 0.4s ease;
 
-  &.warn { background: var(--amber); }
-  &.bad  { background: var(--red); }
+  &.warn {
+    background: var(--amber);
+  }
+  &.bad {
+    background: var(--red);
+  }
 }
 
 .progress-sub {
@@ -412,7 +444,7 @@
   color: var(--muted);
 }
 
-// ── Review step ────────────────────────────────────────────────────────────
+// Review step
 .review-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -447,7 +479,9 @@
   border-bottom: 1px solid rgba(42, 51, 71, 0.5);
   gap: 12px;
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .review-key {
@@ -499,12 +533,21 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 
-  &.ok   { background: rgba(34, 197, 94, 0.15);  color: var(--green); }
-  &.warn { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
-  &.bad  { background: rgba(239, 68, 68, 0.15);  color: var(--red);   }
+  &.ok {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--green);
+  }
+  &.warn {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--amber);
+  }
+  &.bad {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--red);
+  }
 }
 
-// ── Footer ─────────────────────────────────────────────────────────────────
+// Footer
 .modal-footer {
   display: flex;
   align-items: center;
@@ -557,7 +600,9 @@
   color: #000;
   font-weight: 700;
 
-  &:hover:not(:disabled) { background: #fbbf24; }
+  &:hover:not(:disabled) {
+    background: #fbbf24;
+  }
 }
 
 .btn-save {

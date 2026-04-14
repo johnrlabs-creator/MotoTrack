@@ -52,7 +52,7 @@
       "nextServiceDate": "2025-12-01"
     },
     {
-      "id": "1773648978199",
+      "id": 1773648978199,
       "icon": "🚗",
       "nickName": "wigo",
       "year": 2019,
@@ -67,45 +67,6 @@
       "fuelType": "gasoline",
       "health": 0,
       "nextServiceDate": "2026-03-30"
-    },
-    {
-      "id": 1776147690271,
-      "icon": "🚗",
-      "nickName": "test1",
-      "year": 2028,
-      "model": "city",
-      "plateNumber": "HNG1235",
-      "status": "ok",
-      "statusLabel": "Good",
-      "mile": "1000 mi",
-      "vehicleType": "car",
-      "make": "honda",
-      "color": "SILVER",
-      "fuelType": "gasoline",
-      "health": 80,
-      "nextServiceDate": "2026-05-31"
     }
-  ],
-  "maintenance": [
-    {
-      "id": "1",
-      "vehicleId": 1,
-      "type": "Oil Change",
-      "date": "2024-11-15",
-      "mileageAtService": 44500,
-      "cost": 1200,
-      "notes": "Used synthetic oil"
-    }
-  ],
-  "reminders": [
-    {
-      "id": "1",
-      "vehicleId": 1,
-      "type": "PMS",
-      "dueDate": "2025-03-01",
-      "dueMileage": 47000,
-      "isDone": false
-    }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }

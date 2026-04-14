@@ -10,54 +10,17 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VehicleApiService } from '../../core/services/vehicle-api-service';
-import { Vehicle, VehicleFormData } from '../../core/models/vehicle.interface';
+import { Vehicle, VehicleFormData } from '../../core/interfaces/vehicle.interface';
 import { takeUntil, Subject } from 'rxjs';
 import { ModalComponent } from '../shared/modal/modal';
+import { DashboardHelper } from './dashboard-helper';
+import {
+  DashboardServiceReminder,
+  DashboardStats,
+  MaintenanceLog,
+} from '../../core/interfaces/dashboard.interface';
 
-// ── Data interfaces ────────────────────────────────────────────────────────
-
-export interface DashboardStats {
-  totalVehicles: number;
-  overdueServices: number;
-  spentThisYear: string;
-  nextServiceDays: string;
-  nextServiceDate: string;
-}
-
-// export interface Vehicle {
-//   id: number;
-//   icon: string;
-//   name: string;
-//   year: number;
-//   model: string;
-//   plate: string;
-//   /** 'ok' | 'warn' | 'bad' — drives CSS class on .vehicle-icon and .pill */
-//   status: 'ok' | 'warn' | 'bad';
-//   statusLabel: string;
-//   mileage: string;
-// }
-
-export interface ServiceReminder {
-  id: number;
-  service: string;
-  vehicle: string;
-  /** 'overdue' | 'soon' | 'ok' — drives CSS class on .reminder-item */
-  urgency: 'overdue' | 'soon' | 'ok';
-  /** HTML string used with [innerHTML]; safe because it is authored here, not user input */
-  dueLabel: string;
-}
-
-export interface MaintenanceLog {
-  id: number;
-  date: string;
-  vehicle: string;
-  service: string;
-  mileage: string;
-  shop: string;
-  cost: string;
-}
-
-// ── Component ─────────────────────────────────────────────────────────────
+//   Component ─────────────────────────────────────────────────────────────
 
 @Component({
   selector: 'app-dashboard',
@@ -67,20 +30,7 @@ export interface MaintenanceLog {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-  // ── Sidebar / User ───────────────────────────────────────────────────────
-  activeNav = 'dashboard';
-  userName = 'R';
-  userInitial = 'R';
-  userPlan = 'Free Plan';
-
-  // ── Stats ────────────────────────────────────────────────────────────────
-  // stats: DashboardStats = {
-  //   totalVehicles:   0,
-  //   overdueServices: 2, // TODO
-  //   spentThisYear:   '₱8,420',// TODO
-  //   nextServiceDays: '12d',// TODO
-  //   nextServiceDate: 'Mar 21, 2026',// TODO
-  // };
+  dateToday: string = '';
 
   stats = signal<DashboardStats>({
     totalVehicles: 0,
@@ -90,17 +40,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     nextServiceDate: 'Mar 21, 2026', // TODO
   });
 
-  get overdueCount(): number {
-    return this.reminders.filter((r) => r.urgency === 'overdue').length;
-  }
-
   fleetHealthScore = 67;
-
-  // ── Vehicles ─────────────────────────────────────────────────────────────
   vehicles: Vehicle[] = [];
 
-  // ── Reminders ────────────────────────────────────────────────────────────
-  reminders: ServiceReminder[] = [
+  reminders: DashboardServiceReminder[] = [
     {
       id: 1,
       service: 'Oil Change',
@@ -138,7 +81,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     },
   ];
 
-  // ── Maintenance Log ───────────────────────────────────────────────────────
+  // Maintenance Log - TODO: hardcoded for now, will be dynamic in the future
   maintenanceLogs: MaintenanceLog[] = [
     {
       id: 1,
@@ -178,16 +121,21 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     },
   ];
 
-  // ── Chart instances (kept for cleanup) ───────────────────────────────────
+  // Chart instances
   private costChart: any;
   private donutChart: any;
 
-  // ── Cleanup ──────────────────────────────────────────────────────────────
   private destroyed$ = new Subject<void>();
 
   // Services
   private vehicleApiService = inject(VehicleApiService);
   private cdr = inject(ChangeDetectorRef);
+  private dashboardHelper = inject(DashboardHelper);
+
+  // Getters
+  get overdueCount(): number {
+    return this.reminders.filter((r) => r.urgency === 'overdue').length;
+  }
 
   showAddVehicleModal = false;
 
@@ -195,14 +143,22 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showAddVehicleModal = false;
   }
 
-  // ── Lifecycle ─────────────────────────────────────────────────────────────
   ngOnInit(): void {
     this.getVehicles();
+    this.getDateToday();
+  }
+
+  getDateToday(): void {
+    this.dateToday = new Date().toLocaleDateString('en-PH', {
+      month: 'long',
+      year: 'numeric',
+      day: 'numeric',
+    });
   }
 
   getVehicles(): void {
     this.vehicleApiService
-      .getVehiclesRequest()
+      .getVehiclesHttpRequest()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (vehicles: Vehicle[]) => {
@@ -218,10 +174,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateVehicleStats(vehicles: Vehicle[]): void {
-    // this.stats = {
-    //   ...this.stats,
-    //   totalVehicles: vehicles.length,
-    // };
     this.stats.update((stats) => ({
       ...stats,
       totalVehicles: vehicles.length,
@@ -247,11 +199,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private initDonutChart(): void {}
 
   // Event handlers
-
-  setNav(nav: string): void {
-    this.activeNav = nav;
-  }
-
   onExport(): void {
     console.log('Export triggered');
     // TODO: implement CSV export via a service
@@ -264,7 +211,19 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onVehicleAdded(data: VehicleFormData): void {
-    // TODO
+    const payload = this.dashboardHelper.constructVehiclePayload(data);
+    this.vehicleApiService.addVehicleHttpRequest(payload).subscribe({
+      next: (vehicle: Vehicle) => {
+        console.log('vehicle after add:', vehicle);
+
+        this.vehicles.push(vehicle);
+        this.updateVehicleStats(this.vehicles);
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error adding vehicle:', error);
+      },
+    });
   }
 
   onVehicleClick(vehicle: Vehicle): void {
