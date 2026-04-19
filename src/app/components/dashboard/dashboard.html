@@ -7,38 +7,14 @@
       <div class="page-subtitle">{{ dateToday }}</div>
     </div>
     <div class="topbar-actions">
-      <button class="btn btn-ghost" (click)="onExport()">⬇ Export</button>
+      <!-- TODO: Export button with dropdown for PDF/Excel, etc. -->
+      <!-- <button class="btn btn-ghost" (click)="onExport()">⬇ Export</button> -->
       <button class="btn btn-primary" (click)="onAddVehicle()">+ Add Vehicle</button>
     </div>
   </div>
 
   <!-- STAT CARDS -->
-  <div class="stats-row">
-    <div class="stat-card amber">
-      <div class="stat-label">Total Vehicles</div>
-      <div class="stat-value">{{ stats().totalVehicles }}</div>
-      <div class="stat-sub">🚗 active fleet</div>
-      <div class="stat-bg-icon">🚗</div>
-    </div>
-    <div class="stat-card red">
-      <div class="stat-label">Overdue Services</div>
-      <div class="stat-value">{{ stats().overdueServices }}</div>
-      <div class="stat-sub">⚠ needs attention</div>
-      <div class="stat-bg-icon">⚠</div>
-    </div>
-    <div class="stat-card green">
-      <div class="stat-label">Spent This Year</div>
-      <div class="stat-value">{{ stats().spentThisYear }}</div>
-      <div class="stat-sub">↑ vs last year</div>
-      <div class="stat-bg-icon">💰</div>
-    </div>
-    <div class="stat-card blue">
-      <div class="stat-label">Next Service</div>
-      <div class="stat-value">{{ stats().nextServiceDays }}</div>
-      <div class="stat-sub">📅 {{ stats().nextServiceDate }}</div>
-      <div class="stat-bg-icon">🔧</div>
-    </div>
-  </div>
+  <app-stat-cards [stats]="stats()" />
 
   <!-- CHARTS ROW -->
   <div class="grid-3-1">

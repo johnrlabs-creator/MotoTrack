@@ -19,12 +19,13 @@ import {
   DashboardStats,
   MaintenanceLog,
 } from '../../core/interfaces/dashboard.interface';
+import { StatCards } from './stat-cards/stat-cards';
 
 //   Component ─────────────────────────────────────────────────────────────
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, ModalComponent],
+  imports: [CommonModule, ModalComponent, StatCards],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
