@@ -20,12 +20,13 @@ import {
   MaintenanceLog,
 } from '../../core/interfaces/dashboard.interface';
 import { StatCards } from './stat-cards/stat-cards';
+import { Charts } from './charts/charts';
 
 //   Component ─────────────────────────────────────────────────────────────
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, ModalComponent, StatCards],
+  imports: [CommonModule, ModalComponent, StatCards, Charts],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     nextServiceDate: 'Mar 21, 2026', // TODO
   });
 
-  fleetHealthScore = 67;
+  fleetHealthScore = signal<number>(67);
   vehicles: Vehicle[] = [];
 
   reminders: DashboardServiceReminder[] = [
