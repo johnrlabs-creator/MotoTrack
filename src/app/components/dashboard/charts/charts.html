@@ -1,0 +1,37 @@
+<div
+  class="charts-block"
+  [class]="!isChartsShown ? 'charts-clickable-wrapper' : 'charts-static-wrapper'"
+  (click)="showCartsClick()"
+  #showCharts
+>
+  <div>
+    @if (!isChartsShown) {
+      <div class="card" style="animation-delay: 0.3s">
+        <div class="card-header">
+          <div class="card-title">Fleet Health</div>
+        </div>
+        <div id="donutChart"></div>
+        <div class="health-ring-wrapper">
+          <div class="health-label">{{ fleetHealthScore() }}%</div>
+          <div class="health-sublabel">fleet health score</div>
+          <div class="health-sublabel"><span class="click-txt">Click</span> to Show Charts</div>
+        </div>
+      </div>
+    }
+
+    <!-- Defer charts rendering until user clicks to improve performance and 
+     avoid unnecessary rendering when charts are not visible -->
+    @defer (on interaction(showCharts)) {
+      <div class="card" style="animation-delay: 0.25s">
+        <div class="card-header">
+          <div class="card-title">Monthly Maintenance Cost</div>
+          <div class="card-tag">2026 · All Vehicles</div>
+        </div>
+        <div id="costChart"></div>
+        <div class="health-ring-wrapper">
+          <div class="health-sublabel">Upcoming feature...</div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
