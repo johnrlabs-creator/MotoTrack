@@ -24,4 +24,5 @@ export interface MaintenanceLog {
   mileage: string;
   shop: string;
   cost: string;
+  icon: string; // Optional array of icon names to display with this log entry
 }

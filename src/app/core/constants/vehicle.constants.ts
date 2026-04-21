@@ -1,11 +1,11 @@
 import { FuelType, VehicleType } from '../interfaces/vehicle.interface';
 
 export const VEHICLE_TYPES: VehicleType[] = [
-  { value: 'car', label: 'Car', icon: '🚗' },
-  { value: 'suv', label: 'SUV', icon: '🚙' },
-  { value: 'van', label: 'Van', icon: '🚐' },
-  { value: 'truck', label: 'Truck', icon: '🛻' },
-  { value: 'motorcycle', label: 'Moto', icon: '🏍' },
+  { value: 'car', label: 'Car', icon: 'car-front' },
+  { value: 'suv', label: 'SUV', icon: 'car' },
+  { value: 'van', label: 'Van', icon: 'van' },
+  { value: 'truck', label: 'Truck', icon: 'truck' },
+  { value: 'motorcycle', label: 'Moto', icon: 'motorbike' },
 ];
 
 export const FUEL_TYPES: FuelType[] = [
@@ -55,3 +55,5 @@ export const filters = [
 ];
 
 export type FilterValue = 'all' | 'ok' | 'warn' | 'bad';
+export type SortKey = 'nickname' | 'status' | 'mileage' | 'nextService' | 'year';
+export type ViewMode = 'grid' | 'list';

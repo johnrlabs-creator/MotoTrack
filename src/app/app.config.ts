@@ -10,6 +10,11 @@ import {
   LucideVan,
   LucideMotorbike,
   LucideCarFront,
+  LucideTruck,
+  LucideWrench,
+  LucideLifeBuoy,
+  LucideBatteryMedium,
+  LucideDrill,
 } from '@lucide/angular';
 
 export const appConfig: ApplicationConfig = {
@@ -18,6 +23,16 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideAnimationsAsync(),
-    provideLucideIcons(LucideCar, LucideVan, LucideMotorbike, LucideCarFront),
+    provideLucideIcons(
+      LucideCar,
+      LucideVan,
+      LucideMotorbike,
+      LucideCarFront,
+      LucideTruck,
+      LucideWrench,
+      LucideLifeBuoy,
+      LucideBatteryMedium,
+      LucideDrill,
+    ),
   ],
 };

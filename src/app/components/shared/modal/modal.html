@@ -3,10 +3,10 @@
     <!-- Header -->
     <div class="modal-header">
       <div class="modal-title-group">
-        <div class="modal-icon">🚗</div>
+        <div class="modal-icon"><svg size="25" lucidePlus></svg></div>
         <div>
           <div class="modal-title" id="modal-title">Add Vehicle</div>
-          <div class="modal-subtitle">// register a new vehicle to your fleet</div>
+          <div class="modal-subtitle">Register a new vehicle to your fleet</div>
         </div>
       </div>
       <button class="close-btn" (click)="onClose()" aria-label="Close modal">✕</button>
@@ -58,7 +58,7 @@
                 />
               </div>
               <div class="field">
-                <label class="field-label">Vehicle Type</label>
+                <label class="field-label native-label">Vehicle Type</label>
                 <div class="type-picker">
                   @for (vType of vehicleTypes; track vType) {
                     <button
@@ -68,7 +68,9 @@
                       "
                       (click)="setVehicleType(vType.value)"
                     >
-                      <span class="type-icon">{{ vType.icon }}</span>
+                      <span class="type-icon">
+                        <svg [lucideIcon]="vType.icon"></svg>
+                      </span>
                       <span class="type-name">{{ vType.label }}</span>
                     </button>
                   }
@@ -96,7 +98,7 @@
                 />
               </div>
               <div class="field field--sm">
-                <label class="field-label">Year</label>
+                <label class="field-label native-label">Year</label>
                 <input
                   class="field-input"
                   type="number"
@@ -152,7 +154,7 @@
                   </div>
                 </div>
                 <div class="field">
-                  <label class="field-label">Fuel Type</label>
+                  <label class="field-label native-label">Fuel Type</label>
                   <div class="select-wrapper">
                     <select class="field-input field-select" formControlName="fuelType">
                       @for (fuelType of fuelTypes; track fuelTypes) {
