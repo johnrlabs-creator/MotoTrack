@@ -2,25 +2,27 @@
   <div class="stat-card amber">
     <div class="stat-label">Total Vehicles</div>
     <div class="stat-value">{{ stats()?.totalVehicles }}</div>
-    <div class="stat-sub">🚗 active fleet</div>
+    <div class="stat-sub"><svg lucideCarFront size="14"></svg> active fleet</div>
     <div class="stat-bg-icon">🚗</div>
   </div>
   <div class="stat-card red">
     <div class="stat-label">Overdue Services</div>
     <div class="stat-value">{{ stats()?.overdueServices }}</div>
-    <div class="stat-sub">⚠ needs attention</div>
+    <div class="stat-sub"><svg lucideTriangleAlert size="14"></svg> needs attention</div>
     <div class="stat-bg-icon">⚠</div>
   </div>
   <div class="stat-card green">
     <div class="stat-label">Spent This Year</div>
     <div class="stat-value">{{ stats()?.spentThisYear }}</div>
-    <div class="stat-sub">↑ vs last year</div>
+    <div class="stat-sub"><svg lucideChartBarStacked size="14"></svg> vs last year</div>
     <div class="stat-bg-icon">💰</div>
   </div>
   <div class="stat-card blue">
     <div class="stat-label">Next Service</div>
     <div class="stat-value">{{ stats()?.nextServiceDays }}</div>
-    <div class="stat-sub">📅 {{ stats()?.nextServiceDate }}</div>
+    <div class="stat-sub">
+      <svg lucideCalendarDays size="14"></svg> {{ stats()?.nextServiceDate }}
+    </div>
     <div class="stat-bg-icon">🔧</div>
   </div>
 </div>

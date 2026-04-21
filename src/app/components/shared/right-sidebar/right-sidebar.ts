@@ -3,11 +3,22 @@ import { Router } from '@angular/router';
 import { VehicleApiService } from '../../../core/services/vehicle-api-service';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Vehicle } from '../../../core/interfaces/vehicle.interface';
-import { disabled } from '@angular/forms/signals';
+
+// Icons
+import {
+  LucideCar,
+  LucideDynamicIcon,
+  LucideBell,
+  LucideFileText,
+  LucideCircleGauge,
+  LucideChartLine,
+  LucideDownload,
+  LucideCarFront,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-right-sidebar',
-  imports: [],
+  imports: [LucideCar, LucideDynamicIcon, LucideChartLine, LucideDownload],
   templateUrl: './right-sidebar.html',
   styleUrl: './right-sidebar.scss',
 })
@@ -26,10 +37,10 @@ export class RightSidebar implements OnInit {
   private destroyed$ = new Subject<void>();
 
   sideNavItems = [
-    { id: 'dashboard', iconType: '◈', label: 'Dashboard' },
-    { id: 'vehicles', iconType: '🚗', label: 'Vehicles' },
-    { id: 'reminders', iconType: '🔔', label: 'Reminders', disabled: true }, // TODO: disabled while feature not complete
-    { id: 'log', iconType: '📋', label: 'Maintenance Log', disabled: true }, // TODO: disabled while feature not complete
+    { id: 'dashboard', iconType: LucideCircleGauge, label: 'Dashboard' },
+    { id: 'vehicles', iconType: LucideCarFront, label: 'Vehicles' },
+    { id: 'reminders', iconType: LucideBell, label: 'Reminders', disabled: true }, // TODO: disabled while feature not complete
+    { id: 'log', iconType: LucideFileText, label: 'Maintenance Log', disabled: true }, // TODO: disabled while feature not complete
   ];
 
   protected readonly sideNavIcon = computed(() => {

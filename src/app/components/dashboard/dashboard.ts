@@ -21,12 +21,13 @@ import {
 } from '../../core/interfaces/dashboard.interface';
 import { StatCards } from './stat-cards/stat-cards';
 import { Charts } from './charts/charts';
+import { LucideDynamicIcon } from '@lucide/angular';
 
 //   Component ─────────────────────────────────────────────────────────────
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, ModalComponent, StatCards, Charts],
+  imports: [CommonModule, ModalComponent, StatCards, Charts, LucideDynamicIcon],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

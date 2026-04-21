@@ -29,7 +29,10 @@
       <div class="vehicle-list">
         @for (vehicle of vehicles; track vehicle.id) {
           <div class="vehicle-row" (click)="onVehicleClick(vehicle)">
-            <div class="vehicle-icon" [class]="vehicle.status">{{ vehicle.icon }}</div>
+            <div class="vehicle-icon" [class]="vehicle.status">
+              <svg [lucideIcon]="vehicle.icon"></svg>
+              <!-- {{ vehicle.icon }} -->
+            </div>
             <div class="vehicle-info">
               <div class="vehicle-name">{{ vehicle.nickName }}</div>
               <div class="vehicle-meta">

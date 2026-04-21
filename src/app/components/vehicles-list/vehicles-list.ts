@@ -10,6 +10,7 @@ import { VehicleApiService } from '../../core/services/vehicle-api-service';
 import { Subject, takeUntil } from 'rxjs';
 import { Vehicle } from '../../core/interfaces/vehicle.interface';
 import { filters, FilterValue, VEHICLE_FLEET } from '../../core/constants/vehicle.constants';
+import { LucideDynamicIcon, LucideTrash } from '@lucide/angular';
 
 // Interfaces
 
@@ -59,7 +60,7 @@ export type ViewMode = 'grid' | 'list';
 @Component({
   selector: 'app-vehicles-list',
   standalone: true,
-  imports: [],
+  imports: [LucideDynamicIcon, LucideTrash],
   templateUrl: './vehicles-list.html',
   styleUrls: ['./vehicles-list.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -354,8 +355,6 @@ export class VehiclesListComponent implements OnInit {
     });
   }
 
-  // Lifecycle hooks
-
   ngOnInit(): void {
     this.getVehicles();
   }
@@ -428,6 +427,15 @@ export class VehiclesListComponent implements OnInit {
     //       };
     //   }
 
+    if (this.allVehicles().length === 0) {
+      return [
+        { label: 'Total Vehicles', value: '0', sub: 'in fleet', color: 'amber' },
+        { label: 'Overdue', value: '0', sub: 'all clear', color: 'green' },
+        { label: 'Fleet Health', value: '0%', sub: 'average score', color: 'red' },
+        { label: 'Next Service', value: 'N/A', sub: 'no vehicles', color: 'green' },
+      ];
+    }
+
     const totalHealth = this.allVehicles().reduce((sum, v) => sum + v.health, 0);
     const avgHealth = totalHealth / this.allVehicles().length;
 
@@ -441,9 +449,9 @@ export class VehiclesListComponent implements OnInit {
           (new Date(bike.nextServiceDate).getTime() - today.getTime()) / MS_PER_DAY,
         ),
       }))
-      ?.reduce((prev, curr) =>
-        Math.abs(curr.daysFromToday) < Math.abs(prev.daysFromToday) ? curr : prev,
-      );
+      .reduce((prev, curr) => {
+        return Math.abs(curr.daysFromToday) < Math.abs(prev.daysFromToday) ? curr : prev;
+      });
 
     console.log(nearest.nickName); // e.g. "Kawasaki Z400"
     console.log(nearest.daysFromToday); // e.g. -815 (days since purchase)

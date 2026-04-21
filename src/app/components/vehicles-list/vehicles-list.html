@@ -16,11 +16,6 @@
   </div>
 
   <!-- FLEET SUMMARY STRIP -->
-  <!--
-    FIX 1: fleetStats is a computed() signal — call it with ()
-    FIX 2: [class]="stat.color" is DESTRUCTIVE (removes all existing classes).
-            Use explicit boolean [class.x] bindings per variant.
-  -->
   <div class="fleet-strip fade-up" style="animation-delay: 0.05s">
     @for (stat of computedFleetStats(); track stat.label; let last = $last) {
       <div class="fleet-stat" [class.no-border]="last">
@@ -52,10 +47,6 @@
     </div>
 
     <!-- Filter pills -->
-    <!--
-      FIX 3: [class]="..." on an element with existing classes replaces ALL
-              of them. Use [class.active] + [class.f-*] as separate bindings.
-    -->
     <div class="filter-section">
       <div class="filter-group">
         @for (f of filters; track f.value) {
@@ -128,9 +119,10 @@
                   class="vehicle-thumb"
                   [class.ok]="v.status === 'ok'"
                   [class.soon]="v.status === 'warn'"
-                  [class.overdue]="v.status === 'warn'"
+                  [class.overdue]="v.status === 'bad'"
                 >
-                  {{ v.icon }}
+                  <!-- {{ v.icon }} -->
+                  <svg [lucideIcon]="v.icon"></svg>
                 </div>
                 <div>
                   <div class="card-nickname">{{ v.nickName }}</div>
@@ -153,11 +145,6 @@
             </div>
 
             <!-- Health bar -->
-            <!--
-              FIX 4: healthColor() returned Tailwind class strings like
-                      'text-green-400' which won't purge correctly and
-                      conflict with [class]. Use explicit boolean bindings.
-            -->
             <div class="mb-4">
               <div class="mb-1.5 flex items-center justify-between">
                 <span class="health-label">Health</span>
@@ -212,11 +199,6 @@
             <!-- Next service preview -->
             @if (v.nextServiceDate) {
               <div class="next-service-row mt-3">
-                <!--
-                  FIX 5: Arbitrary Tailwind shadow classes generated at runtime
-                          are NOT included in the purged CSS bundle.
-                          Use SCSS classes with explicit glow styles instead.
-                -->
                 <span
                   class="status-dot"
                   [class.dot-red]="getDaysFromNow(v.nextServiceDate) <= 0"
@@ -240,9 +222,13 @@
 
             <!-- Hover action bar -->
             <div class="card-actions" (click)="$event.stopPropagation()">
-              <button class="action-btn" (click)="onEdit(v)">✏ Edit</button>
-              <button class="action-btn accent" (click)="onLogService(v)">+ Log</button>
-              <button class="action-btn danger" (click)="onDelete(v)">🗑</button>
+              <button class="action-btn disabled-btn" (click)="onEdit(v)">✏ Edit</button>
+              <button class="action-btn accent disabled-btn" (click)="onLogService(v)">
+                + Log
+              </button>
+              <button class="action-btn danger" (click)="onDelete(v)">
+                <span><svg lucideTrash size="14"></svg> Delete</span>
+              </button>
             </div>
           </div>
         }
