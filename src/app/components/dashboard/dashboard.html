@@ -97,7 +97,10 @@
             <td class="td-mono td-muted">{{ log.date }}</td>
             <td>{{ log.vehicle }}</td>
             <td>
-              <span class="service-tag">{{ log.service }}</span>
+              <span class="service-tag"
+                ><svg size="12" color="whitesmoke" [lucideIcon]="log.icon"></svg>
+                {{ log.service }}</span
+              >
             </td>
             <td class="td-mono">{{ log.mileage }}</td>
             <td class="td-muted td-sm">{{ log.shop }}</td>

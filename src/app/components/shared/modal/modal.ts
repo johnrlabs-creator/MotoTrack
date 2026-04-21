@@ -12,21 +12,21 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { VehicleFormData } from '../../../core/interfaces/vehicle.interface';
 import { steps } from '../../../core/constants/modal.constants';
 import { FUEL_TYPES, VEHICLE_TYPES } from '../../../core/constants/vehicle.constants';
-import {
-  debounceTime,
-  distinct,
-  distinctUntilChanged,
-  identity,
-  Subject,
-  take,
-  takeUntil,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { FormField } from '../form-field/form-field';
+import { LucideDynamicIcon, LucidePlus } from '@lucide/angular';
 
 @Component({
   selector: 'app-add-vehicle-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, FormField],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FormField,
+    LucideDynamicIcon,
+    LucidePlus,
+  ],
   templateUrl: './modal.html',
   styleUrls: ['./modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,24 +46,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   fb = inject(FormBuilder);
-  vehicleForm: any; // TODO: FormGroup<VehicleFormData>
-
-  // TODO: REMOVE THIS DUMMY DATA
-  // form: VehicleFormData = {
-  //   nickname: '',
-  //   type: '',
-  //   make: '',
-  //   model: '',
-  //   year: null,
-  //   plate: '',
-  //   color: '',
-  //   mileage: 0,
-  //   fuelType: '',
-  //   lastOilChangeMileage: 0,
-  //   oilChangeInterval: 5000,
-  //   lastServiceDate: '',
-  //   nextServiceDate: '',
-  // };
+  vehicleForm: any;
 
   // Computed properties (TODO: DUMMY DATA)
   /** Returns oil change progress as a percentage, or null if inputs are incomplete */
@@ -128,22 +111,18 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.vehicleForm.get('identity.vehicleType')?.setValue(type);
   }
 
-  // TODO: START to review old codes
   // Step validation
-
   isStepValid(): boolean {
-    // TODO: Uncomment once the form is properly set up
-    // if (this.currentStep === 0) {
-    //   return this.vehicleForm.get('identity')?.valid;
-    // }
-    // if (this.currentStep === 1) {
-    //   return this.form.mileage > 0;
-    // }
+    if (this.currentStep === 0) {
+      return this.vehicleForm.get('identity')?.valid;
+    }
+    if (this.currentStep === 1) {
+      return this.vehicleForm.get('mileAge')?.valid;
+    }
     return true;
   }
 
   // Navigation
-
   nextStep(): void {
     if (this.currentStep < this.steps.length - 1 && this.isStepValid()) {
       this.currentStep++;
@@ -157,7 +136,6 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   // Helpers
-
   getTypeIcon(): string {
     return (
       VEHICLE_TYPES.find((t) => t.value === this.vehicleForm.get('identity.vehicleType')?.value)
@@ -166,7 +144,6 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   // Event handlers
-
   onClose(): void {
     this.closed.emit();
   }
@@ -182,7 +159,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.vehicleAdded.emit({ ...this.vehicleForm.value });
     this.closed.emit();
   }
-  // TODO: END to review old codes
 
   ngOnDestroy(): void {
     this.destroyed$.next();

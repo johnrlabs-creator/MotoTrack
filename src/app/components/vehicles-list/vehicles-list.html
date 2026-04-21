@@ -235,7 +235,7 @@
       </div>
     } @else {
       <div class="empty-state fade-up">
-        <div class="empty-icon">🚗</div>
+        <div class="empty-icon"><svg size="50" lucideCar></svg></div>
         <div class="empty-title">NO VEHICLES FOUND</div>
         <div class="empty-sub">
           @if (searchQuery()) {
@@ -355,7 +355,7 @@
 
       @if (filteredVehicles().length === 0) {
         <div class="empty-state fade-up py-16">
-          <div class="empty-icon text-4xl">🚗</div>
+          <div class="empty-icon text-4xl"><svg size="50" lucideCar></svg></div>
           <div class="empty-sub">No vehicles found</div>
           <button class="btn btn-ghost mt-3" (click)="clearFilters()">Clear filters</button>
         </div>

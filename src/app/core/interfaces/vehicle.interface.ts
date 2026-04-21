@@ -115,3 +115,10 @@ export interface TimelineEntry {
   shop: string;
   cost: string;
 }
+
+export interface FleetStat {
+  label: string;
+  value: string;
+  sub: string;
+  color: string;
+}

@@ -47,11 +47,11 @@ export class DashboardHelper {
 
   private getTypeIcon(type: string): string {
     const map: Record<string, string> = {
-      car: '🚗',
-      truck: '🚚',
-      van: '🚐',
-      motorcycle: '🏍️',
-      suv: '🚙',
+      car: 'car-front',
+      truck: 'truck',
+      van: 'van',
+      motorcycle: 'motorbike',
+      suv: 'car',
     };
     return map[type] || '';
   }
