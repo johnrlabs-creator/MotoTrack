@@ -15,6 +15,7 @@
 .logo {
   padding: 28px 24px 24px;
   border-bottom: 1px solid var(--border);
+  background-color: #030405;
 }
 
 .logo-mark {
@@ -93,6 +94,10 @@
     background: rgba(245, 158, 11, 0.1);
     color: var(--amber);
 
+    .icon-wrapper {
+      color: var(--amber);
+    }
+
     &::before {
       content: '';
       position: absolute;
@@ -161,4 +166,8 @@
 .user-plan {
   font-size: 0.72rem;
   color: var(--muted);
+}
+
+.icon-wrapper {
+  color: whitesmoke;
 }

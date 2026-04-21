@@ -14,6 +14,7 @@ export interface Vehicle {
   fuelType: 'Diesel' | 'Gasoline' | 'Electric' | 'Hybrid' | 'LPG';
   health: number; // 0–100,
   nextServiceDate: string; // ISO date string
+  daysFromToday?: number | undefined; // calculated field
 }
 
 export interface VehicleFormIdentity {

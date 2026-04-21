@@ -2,7 +2,7 @@
   "vehicles": [
     {
       "id": "1",
-      "icon": "🚙",
+      "icon": "car-front",
       "nickName": "Grab",
       "year": 2019,
       "model": "Toyota Vios",
@@ -19,7 +19,7 @@
     },
     {
       "id": "2",
-      "icon": "🚐",
+      "icon": "van",
       "nickName": "Adventure",
       "year": 2016,
       "model": "Adventure GLX",
@@ -36,7 +36,7 @@
     },
     {
       "id": "3",
-      "icon": "🏍",
+      "icon": "motorbike",
       "nickName": "Click",
       "year": 2020,
       "model": "Honda Click 125",
@@ -53,7 +53,7 @@
     },
     {
       "id": 1773648978199,
-      "icon": "🚗",
+      "icon": "car-front",
       "nickName": "wigo",
       "year": 2019,
       "model": "Wigo 1.0 G",

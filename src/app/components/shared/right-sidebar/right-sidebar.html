@@ -1,7 +1,7 @@
 <aside class="sidebar">
   <div class="logo">
     <div class="logo-mark">
-      <div class="logo-icon">🔧</div>
+      <svg size="50" lucideCar></svg>
       <div class="logo-text">Moto<span>Track</span></div>
     </div>
   </div>
@@ -16,7 +16,7 @@
         [class.disabled]="nav.disabled"
       >
         <span class="nav-icon">
-          {{ nav.iconType }}
+          <svg [class.icon-wrapper]="!nav.disabled" [lucideIcon]="nav.iconType" size="18"></svg>
         </span>
         {{ nav.label }}
 
@@ -28,14 +28,14 @@
 
     <div class="nav-label" style="margin-top: 8px">Reports</div>
     <a class="nav-item disabled" [class.active]="activeNav() === 'cost'" (click)="setNav('cost')">
-      <span class="nav-icon">📊</span> Cost Analysis
+      <span class="nav-icon"> <svg lucideChartLine></svg> </span> Cost Analysis
     </a>
     <a
       class="nav-item disabled"
       [class.active]="activeNav() === 'export'"
       (click)="setNav('export')"
     >
-      <span class="nav-icon">⬇</span> Export CSV
+      <span class="nav-icon"><svg lucideDownload></svg></span> Export CSV
     </a>
   </nav>
 
