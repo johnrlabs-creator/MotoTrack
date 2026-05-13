@@ -6,6 +6,7 @@ import {
   OnInit,
   inject,
   OnDestroy,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -33,10 +34,14 @@ import { LucideDynamicIcon, LucidePlus } from '@lucide/angular';
 })
 export class ModalComponent implements OnInit, OnDestroy {
   /** Emitted when the modal should be closed (cancel or successful save) */
-  @Output() closed = new EventEmitter<void>();
+  // @Output() closed = new EventEmitter<void>();
+
+  // Signal based Output()
+  closed = output<null>();
 
   /** Emitted with the completed form data when user clicks Save */
-  @Output() vehicleAdded = new EventEmitter<VehicleFormData>();
+  // @Output() vehicleAdded = new EventEmitter<VehicleFormData>();
+  vehicleAdded = output<VehicleFormData>();
 
   currentStep = 0;
   readonly steps = steps;
@@ -145,7 +150,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   // Event handlers
   onClose(): void {
-    this.closed.emit();
+    this.closed.emit(null);
   }
 
   /** Close only if user clicked the dark backdrop itself, not the modal card */
@@ -157,7 +162,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.vehicleAdded.emit({ ...this.vehicleForm.value });
-    this.closed.emit();
+    this.closed.emit(null);
   }
 
   ngOnDestroy(): void {
